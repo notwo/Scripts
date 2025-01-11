@@ -1,3 +1,4 @@
+from tkinter import Tk,messagebox
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -7,12 +8,11 @@ from datetime import datetime
 import pytz
 import time
 import os
+import sys
 
 
 def to_csv(numbers_and_prices):
     file_path = "stocks.csv"
-    file_exists = os.path.exists(file_path)
-
     jst = pytz.timezone('Asia/Tokyo')
     current_datetime = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     for i in range(len(numbers_and_prices)):
@@ -21,7 +21,7 @@ def to_csv(numbers_and_prices):
     header = ["日時", "銘柄コード", "株価"]
     with open(file_path, mode="a", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
-        if not file_exists:
+        if not os.path.exists(file_path):
             writer.writerow(header)
 
         for stock in numbers_and_prices:
@@ -54,8 +54,13 @@ def detect_stock_price(stock_numbers):
 
 
 def get_stock_numbers():
+    file_path = "stocklist.txt"
+    if not os.path.exists(file_path):
+        messagebox.showinfo('ファイル未存在エラー', f'stockGetter.exeと同フォルダに銘柄コードリスト({file_path})が存在しません')
+        sys.exit()
+
     stock_numbers = []
-    with open("stocklist.txt", "r") as f:
+    with open(file_path, "r") as f:
         while(True):
             line = f.readline().rstrip("\n")
             stock_numbers.append(line)
