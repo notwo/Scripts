@@ -18,7 +18,7 @@ def to_csv(numbers_and_prices):
     for i in range(len(numbers_and_prices)):
         numbers_and_prices[i].insert(0, current_datetime)
 
-    header = ["日時", "銘柄コード", "株価"]
+    header = ["日時", "銘柄コード", "銘柄名", "株価(円)"]
     with open(file_path, mode="a", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
         if not os.path.exists(file_path):
@@ -44,8 +44,10 @@ def detect_stock_price(stock_numbers):
 
         # 検索後の画面
         price_element = driver.find_element(By.XPATH, "//div[@id='root']/main/div/section/div[2]/div[2]/div/span/span/span")
-        price = int(price_element.text.replace(",", ""))
-        numbers_and_prices.append([stock, price])
+        price = int(float(price_element.text.replace(",", "")))
+        company_name_element = driver.find_element(By.XPATH, "//div[@id='root']/main/div/section/div[2]/header/div/h2")
+        company_name = company_name_element.text
+        numbers_and_prices.append([stock, company_name, price])
 
     driver.close()
     driver.quit()
