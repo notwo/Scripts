@@ -19,9 +19,10 @@ def to_csv(numbers_and_prices):
         numbers_and_prices[i].insert(0, current_datetime)
 
     header = ["日時", "銘柄コード", "銘柄名", "株価(円)"]
+    header_exist = os.path.exists(file_path)
     with open(file_path, mode="a", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
-        if not os.path.exists(file_path):
+        if not header_exist:
             writer.writerow(header)
 
         for stock in numbers_and_prices:
