@@ -1,0 +1,7 @@
+/py/*.zip
+/py/*.csv
+/py/*.txt
+/py/build/*
+!/py/build/.gitkeep
+/py/dist/*
+!/py/dist/.gitkeep
