@@ -1,5 +1,8 @@
 /py/*.csv
+/py/*.pdf
 /py/*.txt
+/py/*.ttf
+/py/*.otf
 /py/build/*
 !/py/build/.gitkeep
 /py/dist/*
