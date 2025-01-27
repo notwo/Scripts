@@ -1,17 +1,15 @@
-from tkinter import Tk,messagebox
 import csv
-from datetime import datetime
-import pytz
-import time
-from enum import Enum
-import japanize_matplotlib
-import matplotlib.pyplot as plt
-from matplotlib import rcParams
-import matplotlib.font_manager as fm
-from matplotlib.backends.backend_pdf import PdfPages
-import pandas as pd
 import os
 import sys
+from datetime import datetime
+from enum import Enum
+from tkinter import Tk, messagebox
+
+import japanize_matplotlib
+import matplotlib.font_manager as fm
+import matplotlib.pyplot as plt
+import pandas as pd
+from matplotlib.backends.backend_pdf import PdfPages
 
 
 class StockDataRow(Enum):
@@ -40,12 +38,14 @@ def create_graph_on_pdf(stocks_by_day):
     plt.legend(title="銘柄")
     plt.grid(False)
     plt.tight_layout()
-    #plt.show() # グラフを即時描画
+    # plt.show() # グラフを即時描画
 
     # PDF出力
     start_datetime = stocks_by_day[0][StockDataRow.DATE.value].replace("/", "")
-    end_datetime = stocks_by_day[len(stocks_by_day) - 1][StockDataRow.DATE.value].replace("/", "")
-    with PdfPages(f'株価チャート_{start_datetime}_{end_datetime}.pdf') as pdf:
+    end_datetime = stocks_by_day[len(stocks_by_day) - 1][
+        StockDataRow.DATE.value
+    ].replace("/", "")
+    with PdfPages(f"株価チャート_{start_datetime}_{end_datetime}.pdf") as pdf:
         pdf.savefig()  # 現在のプロットをPDFに保存
         plt.close()
 
@@ -53,7 +53,10 @@ def create_graph_on_pdf(stocks_by_day):
 def format_array_from_csv():
     file_path = "stocks.csv"
     if not os.path.exists(file_path):
-        messagebox.showinfo('ファイル未存在エラー', f'stockGraph.exeと同フォルダに株価リスト({file_path})が存在しません')
+        messagebox.showinfo(
+            "ファイル未存在エラー",
+            f"stockGraph.exeと同フォルダに株価リスト({file_path})が存在しません",
+        )
         sys.exit()
 
     stocks = []
@@ -69,12 +72,16 @@ def format_array_from_csv():
     new_arr = []
     for stock in stocks:
         date = stock[StockDataRow.DATE.value].split(" ")[0]
-        code = f'{stock[StockDataRow.CODE.value]}({stock[StockDataRow.CODE_NAME.value]})'
+        code = (
+            f"{stock[StockDataRow.CODE.value]}({stock[StockDataRow.CODE_NAME.value]})"
+        )
         price = int(stock[StockDataRow.PRICE.value])
         new_arr.append([date, code, price])
 
     # データ全体を日付でソート
-    new_arr.sort(key=lambda x: datetime.strptime(x[StockDataRow.DATE.value], "%Y/%m/%d"))
+    new_arr.sort(
+        key=lambda x: datetime.strptime(x[StockDataRow.DATE.value], "%Y/%m/%d")
+    )
 
     # pandasで頭2つの要素(日時,銘柄コード)から重複を削除
     df = pd.DataFrame(new_arr, columns=["A", "B", "C"])
@@ -82,7 +89,6 @@ def format_array_from_csv():
     stocks_by_day = df.values.tolist()
 
     return stocks_by_day
-
 
 
 # entry point
