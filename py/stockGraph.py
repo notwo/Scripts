@@ -31,12 +31,19 @@ def create_graph_on_pdf(stocks_by_day):
     for category, group in df.groupby("銘柄"):
         plt.plot(group["日付"], group["株価"], marker="o", label=category)
 
+    prices = [i[2] for i in stocks_by_day]
+    dates = [i[0] for i in stocks_by_day]
+    for i, txt in enumerate(prices):
+        plt.annotate(txt, (dates[i], prices[i]), fontsize=8, ha="center", va="bottom")
+
+
     # グラフの装飾
     plt.title("銘柄ごと株価推移")
     plt.xlabel("日付")
-    plt.ylabel("株価")
+    plt.ylabel("株価(￥)")
     plt.legend(title="銘柄")
     plt.grid(False)
+    plt.xticks(fontsize=6.5)  # X軸の目盛りのフォントサイズ
     plt.tight_layout()
     # plt.show() # グラフを即時描画
 
