@@ -82,7 +82,11 @@ def format_array_from_csv():
         code = (
             f"{stock[StockDataRow.CODE.value]}({stock[StockDataRow.CODE_NAME.value]})"
         )
-        price = int(stock[StockDataRow.PRICE.value])
+        price_text = stock[StockDataRow.PRICE.value]
+        if "." in price_text:
+            price = float(price_text)
+        else:
+            price = int(price_text)
         new_arr.append([date, code, price])
 
     # データ全体を日付でソート
