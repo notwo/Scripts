@@ -4,6 +4,7 @@ import sys
 import time
 from datetime import datetime
 from tkinter import Tk, messagebox
+from playwright.sync_api import sync_playwright
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -28,42 +29,49 @@ def to_csv(numbers_and_prices):
 
 
 def detect_stock_price(stock_numbers):
-    numbers_and_prices = []
+    result = []
 
-    driver = webdriver.Chrome()
-    driver.get("https://finance.yahoo.co.jp/")
-    time.sleep(0.5)  # 読み込み時間を考慮
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=False)
+        page = browser.new_page()
 
-    for stock in stock_numbers:
-        # yahoo financeトップ
-        input = driver.find_element(By.XPATH, "//input[@name='query']")
-        price = input.send_keys(stock)
-        input.send_keys(Keys.RETURN)
-        time.sleep(0.5)  # 読み込み時間を考慮
+        for stock in stock_numbers:
 
-        # 検索後の画面
-        price_element = driver.find_element(
-            By.XPATH,
-            "//div[@id='root']/main/div/section/div[2]/div[2]/div/span/span/span",
-        )
+            print(f"取得中: {stock}")
 
-        company_name_element = driver.find_element(
-            By.XPATH, "//div[@id='root']/main/div/section/div[2]/header/div/h2"
-        )
-        company_name = company_name_element.text
-        if price_element.text == "---":
-            messagebox.showinfo(
-                "株価取得エラー",
-                f"{company_name}の株価取得できません",
+            page.goto(
+                f"https://finance.yahoo.co.jp/quote/{stock}.T",
+                wait_until="networkidle"
             )
-            break
-        price = int(float(price_element.text.replace(",", "")))
-        numbers_and_prices.append([stock, company_name, price])
 
-    driver.close()
-    driver.quit()
+            company_name = page.locator("h2").filter(
+                has_text="(株)"
+            ).first.inner_text()
 
-    return numbers_and_prices
+            price_text = (
+                page.locator('[class*="_CommonPriceBoard__priceBlock"]')
+                    .locator('[class*="_StyledNumber__value"]')
+                    .first
+                    .inner_text()
+            )
+            price_text = price_text.replace(",", "")
+
+            if "." in price_text:
+                price = float(price_text)
+            else:
+                price = int(price_text)
+
+            result.append([
+                stock,
+                company_name,
+                price
+            ])
+
+            print(company_name, price)
+
+        browser.close()
+
+    return result
 
 
 def get_stock_numbers():
