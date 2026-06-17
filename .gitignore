@@ -1,9 +1,17 @@
-/py/*.csv
-/py/*.pdf
-/py/*.txt
-/py/*.ttf
-/py/*.otf
-/py/build/*
-!/py/build/.gitkeep
-/py/dist/*
-!/py/dist/.gitkeep
+# Python
+/py/*/__pycache__/
+/py/*/*.pyc
+/py/*/*.pyo
+/py/*/*.pyd
+/py/*/*.log
+/py/*/build/*
+!/py/*/build/.gitkeep
+/py/*/dist/*
+!/py/*/dist/.gitkeep
+
+# files
+/py/*/*.csv
+/py/*/*.pdf
+/py/*/*.txt
+/py/*/*.ttf
+/py/*/*.otf

@@ -1,0 +1,32 @@
+# 以下の形式で記述すること
+# pages:
+#  - name: 上場企業名
+#    code: 企業コード
+#  ...
+# csv:
+#  - filename: 出力先CSVファイル名
+#  - header: ヘッダ
+# browser:
+#   width: 起動するブラウザ(Chrome)の横幅
+#   height: 起動するブラウザ(Chrome)の横幅
+#   timeout: アクセス時タイムアウト値(ms)
+
+stocks:
+  - name: 企業名
+    code: コード
+csv:
+  filename: stocks.csv
+  header:
+    - 日時
+    - 銘柄コード
+    - 銘柄名
+    - 株価(円)
+pdf:
+  header:
+    - 日付
+    - 銘柄
+    - 株価
+browser:
+  width: 1920
+  height: 1080
+  timeout: 60000
