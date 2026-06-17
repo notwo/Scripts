@@ -12,10 +12,8 @@
 #   timeout: アクセス時タイムアウト値(ms)
 
 stocks:
-  - name: 任天堂
-    code: 7974
-  - name: ソフトバンク
-    code: 9434
+  - name: 企業名
+    code: コード
 csv:
   filename: stocks.csv
   header:
