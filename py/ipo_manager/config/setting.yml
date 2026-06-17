@@ -1,0 +1,17 @@
+# 以下の形式で記述すること
+# pages:
+#  - naem: スクリーンショット名
+#    url: スクリーンショット取得したい画面URL
+#  ...
+# browser:
+# width: 起動するブラウザ(Chrome)の横幅
+# height: 起動するブラウザ(Chrome)の横幅
+# timeout: アクセス時タイムアウト値(ms)
+
+pages:
+  - name: スクリーンショット名
+    url: スクショ取得したい画面URL
+browser:
+  width: 1920
+  height: 1080
+  timeout: 60000
