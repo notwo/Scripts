@@ -1,5 +1,6 @@
 from datetime import datetime
 
+
 class Util:
   @classmethod
   def current_time(self) -> datetime:

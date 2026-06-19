@@ -29,7 +29,7 @@ class StockGraph:
     def __init__(self, filename: str) -> None:
         self.config = None
         self._load_config(filename)
-        self.stocks = self.config["pdf"]
+        self.logger = None
 
     def _load_config(self, filename: str) -> None:
         config_file = Path(filename)
@@ -57,19 +57,18 @@ class StockGraph:
         plt.grid(False)
         plt.xticks(fontsize=6.5)  # X軸の目盛りのフォントサイズ
         plt.tight_layout()
-        # plt.show() # グラフを即時描画
 
         # PDF出力
         start_datetime = stocks_by_day[0][StockDataRow.DATE.value].replace("/", "")
         end_datetime = stocks_by_day[len(stocks_by_day) - 1][
             StockDataRow.DATE.value
         ].replace("/", "")
-        with PdfPages(f"株価チャート_{start_datetime}_{end_datetime}.pdf") as pdf:
+        with PdfPages(f'{self.config["pdf"]["filepath"]}/株価チャート_{start_datetime}_{end_datetime}.pdf') as pdf:
             pdf.savefig()  # 現在のプロットをPDFに保存
             plt.close()
 
     def format_array_from_csv(self) -> list[StockByDay]:
-        file_path = self.config["csv"]["filename"]
+        file_path = f'{self.config["csv"]["filepath"]}/{self.config["csv"]["filename"]}'
         if not os.path.exists(file_path):
             messagebox.showinfo(
                 "ファイル未存在エラー",

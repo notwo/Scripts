@@ -1,5 +1,5 @@
-from stock_getter import StockGetter
-from stock_graph import StockGraph
+from modules.stock_getter import StockGetter
+from modules.stock_graph import StockGraph
 
 
 def main():

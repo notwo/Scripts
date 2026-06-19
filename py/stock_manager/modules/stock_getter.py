@@ -1,10 +1,11 @@
 import csv
 import os
-import yaml
-from pathlib import Path
 from datetime import datetime
-from typing import TypeAlias
+from pathlib import Path
 from tkinter import Tk, messagebox
+from typing import TypeAlias
+
+import yaml
 from playwright.sync_api import sync_playwright
 
 
@@ -15,6 +16,7 @@ class StockGetter:
     def __init__(self, filename: str) -> None:
         self.config = None
         self._load_config(filename)
+        self.logger = None
         self.stocks = self.config["stocks"]
 
     def _load_config(self, filename: str) -> None:
@@ -24,7 +26,7 @@ class StockGetter:
             self.config = yaml.safe_load(f)
 
     def file_to_csv(self, numbers_and_prices: list[int]) -> None:
-        file_path = self.config["csv"]["filename"]
+        file_path = f'{self.config["csv"]["filepath"]}/{self.config["csv"]["filename"]}'
         current_datetime = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
         for i in range(len(numbers_and_prices)):
             numbers_and_prices[i].insert(0, current_datetime)
@@ -43,7 +45,7 @@ class StockGetter:
         result = []
 
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=False)
+            browser = p.chromium.launch(headless=self.config["browser"]["headless_mode"])
             page = browser.new_page()
 
             for stock in self.stocks:

@@ -4,10 +4,9 @@
 /py/*/*.pyo
 /py/*/*.pyd
 /py/*/*.log
-/py/*/build/*
-!/py/*/build/.gitkeep
 /py/*/dist/*
 !/py/*/dist/.gitkeep
+/py/*/modules/*
 /py/*/screenshots/*
 
 # files
