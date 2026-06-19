@@ -33,3 +33,6 @@ browser:
   height: 1080
   timeout: 60000
   headless_mode: True
+log:
+  filepath: log
+  filename: stock_manager.log

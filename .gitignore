@@ -4,6 +4,7 @@
 /py/*/*.pyo
 /py/*/*.pyd
 /py/*/*.log
+/py/*/log/*
 /py/*/dist/*
 !/py/*/dist/.gitkeep
 /py/*/modules/*
