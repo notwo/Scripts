@@ -33,7 +33,9 @@ class StockGraph:
         except Exception:
             self.logger.exception(f"設定ファイルの読み込みに失敗しました: {filename}")
 
-        self.logger = Logger.get_logger(self.config["log"]["filepath"], self.config["log"]["filename"])
+        self.logger = Logger.get_logger(
+            self.config["log"]["filepath"],
+            self.config["log"]["filename"])
 
     def create_graph_on_pdf(self, stocks_by_day: list[StockByDay]) -> None:
         self.logger.info("グラフ作成開始")

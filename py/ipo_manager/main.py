@@ -1,4 +1,4 @@
-from ipo_screenshot import ScreenShotCollctor
+from modules.ipo_screenshot import ScreenShotCollctor
 
 
 def main():
