@@ -15,6 +15,7 @@ stocks:
   - name: 企業名
     code: コード
 csv:
+  filepath: dist
   filename: stocks.csv
   header:
     - 日時
@@ -22,6 +23,7 @@ csv:
     - 銘柄名
     - 株価(円)
 pdf:
+  filepath: dist
   header:
     - 日付
     - 銘柄
@@ -30,3 +32,7 @@ browser:
   width: 1920
   height: 1080
   timeout: 60000
+  headless_mode: True
+log:
+  filepath: log
+  filename: stock_manager.log
