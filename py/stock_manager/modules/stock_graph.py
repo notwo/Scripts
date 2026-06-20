@@ -3,11 +3,11 @@ from datetime import datetime
 from enum import Enum
 from typing import TypeAlias
 
-import japanize_matplotlib
 import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.backends.backend_pdf import PdfPages
+
 from modules.logger import Logger
 from modules.util import Util
 
@@ -25,6 +25,9 @@ class StockDataRow(Enum):
 
 class StockGraph:
     def __init__(self, filename: str) -> None:
+        # グラフの日本語文字フォント設定
+        plt.rcParams["font.family"] = "Yu Gothic"
+
         try:
             self.config = Util.load_config(filename)
         except FileNotFoundError:
@@ -65,10 +68,7 @@ class StockGraph:
             )
 
         # グラフの装飾
-        plt.title(
-            "日本株推移" if country == "ja"
-            else "米国株推移"
-        )
+        plt.title("日本株推移" if country == "ja" else "米国株推移")
         plt.xlabel("日付")
         plt.ylabel("株価(＄)" if country == "ja" else "株価(￥)")
         plt.legend()
