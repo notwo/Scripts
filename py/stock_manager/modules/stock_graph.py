@@ -12,14 +12,15 @@ from modules.logger import Logger
 from modules.util import Util
 
 
-StockByDay: TypeAlias = tuple[str, str, int | float]
+StockByDay: TypeAlias = tuple[str, str, str, int | float]
 
 
 class StockDataRow(Enum):
     DATE = 0
     CODE = 1
     CODE_NAME = 2
-    PRICE = 3
+    COUNTRY = 3
+    PRICE = 4
 
 
 class StockGraph:
@@ -37,6 +38,48 @@ class StockGraph:
             self.config["log"]["filepath"],
             self.config["log"]["filename"])
 
+    def _create_country_graph(
+        self,
+        df: pd.DataFrame,
+        country: str,
+        output_file: str
+    ) -> None:
+
+        country_df = df[df["国"] == country]
+
+        if country_df.empty:
+            self.logger.warning(
+                f"{country} のデータがありません"
+            )
+            return
+
+        # 折れ線グラフを作成
+        plt.figure(figsize=(8, 6))
+
+        for category, group in country_df.groupby("銘柄"):
+            plt.plot(
+                group["日付"],
+                group["株価"],
+                marker="o",
+                label=category
+            )
+
+        # グラフの装飾
+        plt.title(
+            "日本株推移" if country == "ja"
+            else "米国株推移"
+        )
+        plt.xlabel("日付")
+        plt.ylabel("株価(＄)" if country == "ja" else "株価(￥)")
+        plt.legend()
+        plt.tight_layout()
+
+        # PDF出力
+        self.logger.info("PDF出力")
+        with PdfPages(output_file) as pdf:
+            pdf.savefig()
+            plt.close()
+
     def create_graph_on_pdf(self, stocks_by_day: list[StockByDay]) -> None:
         self.logger.info("グラフ作成開始")
 
@@ -46,29 +89,17 @@ class StockGraph:
         # 日付をdatetime型に変換
         df["Date"] = pd.to_datetime(df["日付"])
 
-        # 折れ線グラフを作成
-        plt.figure(figsize=(8, 6))
-        for category, group in df.groupby("銘柄"):
-            plt.plot(group["日付"], group["株価"], marker="o", label=category)
-
-        # グラフの装飾
-        plt.title("銘柄ごと株価推移")
-        plt.xlabel("日付")
-        plt.ylabel("株価(￥)")
-        plt.legend(title="銘柄")
-        plt.grid(False)
-        plt.xticks(fontsize=6.5)  # X軸の目盛りのフォントサイズ
-        plt.tight_layout()
-
-        # PDF出力
-        self.logger.info("PDF出力")
-        start_datetime = stocks_by_day[0][StockDataRow.DATE.value].replace("/", "")
-        end_datetime = stocks_by_day[len(stocks_by_day) - 1][
-            StockDataRow.DATE.value
-        ].replace("/", "")
-        with PdfPages(f'{self.config["pdf"]["filepath"]}/株価チャート_{start_datetime}_{end_datetime}.pdf') as pdf:
-            pdf.savefig()  # 現在のプロットをPDFに保存
-            plt.close()
+        # グラフ作成
+        self._create_country_graph(
+            df,
+            "ja",
+            f'{self.config["pdf"]["filepath"]}/日本株チャート.pdf'
+        )
+        self._create_country_graph(
+            df,
+            "us",
+            f'{self.config["pdf"]["filepath"]}/米国株チャート.pdf'
+        )
 
         self.logger.info("グラフ作成終了")
 
@@ -107,7 +138,15 @@ class StockGraph:
                 price = float(price_text)
             else:
                 price = int(price_text)
-            new_arr.append([date, code, price])
+
+            country = stock[StockDataRow.COUNTRY.value]
+
+            new_arr.append([
+                date,
+                code,
+                country,
+                price
+            ])
 
         # データ全体を日付でソート
         new_arr.sort(
@@ -115,8 +154,13 @@ class StockGraph:
         )
 
         # pandasで頭2つの要素(日時,銘柄コード)から重複を削除
-        df = pd.DataFrame(new_arr, columns=["A", "B", "C"])
-        df = df.drop_duplicates(subset=["A", "B"])
+        df = pd.DataFrame(
+            new_arr,
+            columns=["Date", "Code", "Country", "Price"]
+        )
+        df = df.drop_duplicates(
+            subset=["Date", "Code"]
+        )
         stocks_by_day = df.values.tolist()
 
         self.logger.info("データ整形終了")

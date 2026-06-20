@@ -67,26 +67,50 @@ class StockGetter:
                 for stock in self.stocks:
                     name = stock["name"]
                     code = stock["code"]
+                    country = stock["country"]
 
                     self.logger.info(f"取得中: {name}({code})")
 
-                    page.goto(
-                        f"https://finance.yahoo.co.jp/quote/{code}.T",
-                        wait_until="networkidle"
-                    )
+                    match country:
+                        case "ja":
+                            page.goto(
+                                f'{self.config["base_url"]}/{code}.T',
+                                wait_until="networkidle"
+                            )
 
-                    company_name = page.locator("h2").filter(
-                        has_text="(株)"
-                    ).first.inner_text()
+                            # 取得先画面のUI変更があった場合に失敗する可能性大
+                            company_name = page.locator("h2").filter(
+                                has_text="(株)"
+                            ).first.inner_text()
 
-                    price_text = (
-                        # 取得先画面のUI変更があった場合に失敗する可能性大
-                        page.locator('[class*="_CommonPriceBoard__priceBlock"]')
-                            .locator('[class*="_StyledNumber__value"]')
-                            .first
-                            .inner_text()
-                    )
-                    price_text = price_text.replace(",", "")
+                            price_text = (
+                                # 取得先画面のUI変更があった場合に失敗する可能性大
+                                page.locator('[class*="_CommonPriceBoard__priceBlock"]')
+                                    .locator('[class*="_StyledNumber__value"]')
+                                    .first
+                                    .inner_text()
+                            )
+                            price_text = price_text.replace(",", "")
+
+                        case "us":
+                            page.goto(
+                                f'{self.config["base_url"]}/{code}',
+                                wait_until="networkidle"
+                            )
+
+                            company_name = (
+                                # 取得先画面のUI変更があった場合に失敗する可能性大
+                                page.locator('h2[class*="PriceBoard__name__"]')
+                                .first
+                                .inner_text()
+                            )
+                            price_text = (
+                                # 取得先画面のUI変更があった場合に失敗する可能性大
+                                page.locator(
+                                    '[class*="PriceBoard"] span[class*="StyledNumber__value__"]'
+                                ).first.inner_text()
+                            )
+                            price_text = price_text.replace(",", "")
 
                     if "." in price_text:
                         price = float(price_text)
@@ -96,6 +120,7 @@ class StockGetter:
                     result.append([
                         code,
                         company_name,
+                        country,
                         price
                     ])
 
