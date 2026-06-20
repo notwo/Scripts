@@ -1,5 +1,6 @@
 # Python
 /py/*/__pycache__/
+/py/*/*/__pycache__/*
 /py/*/*.pyc
 /py/*/*.pyo
 /py/*/*.pyd
@@ -7,7 +8,6 @@
 /py/*/log/*
 /py/*/dist/*
 !/py/*/dist/.gitkeep
-/py/*/*/__pycache__/*
 /py/*/screenshots/*
 
 # files

@@ -3,7 +3,8 @@ import os
 from datetime import datetime
 from typing import TypeAlias
 
-from playwright.sync_api import sync_playwright, Error, TimeoutError
+from playwright.sync_api import Error, TimeoutError, sync_playwright
+
 from modules.logger import Logger
 from modules.util import Util
 
@@ -26,6 +27,141 @@ class StockGetter:
             self.config["log"]["filepath"],
             self.config["log"]["filename"])
         self.stocks = self.config["stocks"]
+
+    def _get_ja_stock(
+        self,
+        page,
+        code: str
+    ) -> tuple[str, float | int]:
+        page.goto(
+            f'{self.config["base_url"]}/{code}.T',
+            wait_until="networkidle"
+        )
+
+        company_name = (
+            page.locator("h2")
+            .filter(has_text="(株)")
+            .first
+            .inner_text()
+        )
+
+        price_text = (
+            page.locator('[class*="_CommonPriceBoard__priceBlock"]')
+            .locator('[class*="_StyledNumber__value"]')
+            .first
+            .inner_text()
+        )
+
+        price_text = price_text.replace(",", "")
+
+        price = (
+            float(price_text)
+            if "." in price_text
+            else int(price_text)
+        )
+
+        return company_name, price
+
+    def _get_us_stock(
+        self,
+        page,
+        code: str
+    ) -> tuple[str, float | int]:
+        page.goto(
+            f'{self.config["base_url"]}/{code}',
+            wait_until="networkidle"
+        )
+
+        company_name = (
+            page.locator(
+                'h2[class*="PriceBoard__name__"]'
+            )
+            .first
+            .inner_text()
+        )
+
+        price_text = (
+            page.locator(
+                '[class*="PriceBoard"] span[class*="StyledNumber__value__"]'
+            )
+            .first
+            .inner_text()
+        )
+        price_text = price_text.replace(",", "")
+
+        price = (
+            float(price_text)
+            if "." in price_text
+            else int(price_text)
+        )
+
+        return company_name, price
+
+    def detect_stock_price(self) -> list[StockInfo]:
+        result = []
+
+        self.logger.info("株価取得処理開始")
+        try:
+            with sync_playwright() as p:
+                self.logger.info("アクセス開始")
+                browser = p.chromium.launch(headless=self.config["browser"]["headless_mode"])
+                page = browser.new_page()
+
+                for stock in self.stocks:
+                    name = stock["name"]
+                    code = stock["code"]
+                    country = stock["country"]
+
+                    self.logger.info(f"取得中: {name}({code})")
+
+                    match country:
+                        case "ja":
+                            company_name, price = (
+                                self._get_ja_stock(
+                                    page,
+                                    code
+                                )
+                            )
+
+                        case "us":
+                            company_name, price = (
+                                self._get_us_stock(
+                                    page,
+                                    code
+                                )
+                            )
+
+                        case _:
+                            self.logger.warning(
+                                f"未対応の国コード: {country}"
+                            )
+                            continue
+
+                    result.append([
+                        code,
+                        company_name,
+                        country,
+                        price
+                    ])
+
+                    self.logger.info(f"{company_name}, {price}")
+
+                browser.close()
+
+        except TimeoutError:
+            self.logger.error("タイムアウトが発生しました。")
+
+        except Error as e:
+            if "ERR_INTERNET_DISCONNECTED" in str(e):
+                self.logger.error("インターネット接続なし")
+            else:
+                self.logger.exception("Playwrightエラー")
+        except Exception:
+            self.logger.exception("予期しないエラー")
+
+        self.logger.info("株価取得処理終了")
+
+        return result
 
     def file_to_csv(self, numbers_and_prices: list[int]) -> None:
         self.logger.info("CSV出力開始")
@@ -53,92 +189,3 @@ class StockGetter:
             self.logger.exception(f"CSVファイルの読み込みに失敗しました: {file_path}")
 
         self.logger.info("CSV出力終了")
-
-    def detect_stock_price(self) -> list[StockInfo]:
-        result = []
-
-        self.logger.info("株価取得処理開始")
-        try:
-            with sync_playwright() as p:
-                self.logger.info("アクセス開始")
-                browser = p.chromium.launch(headless=self.config["browser"]["headless_mode"])
-                page = browser.new_page()
-
-                for stock in self.stocks:
-                    name = stock["name"]
-                    code = stock["code"]
-                    country = stock["country"]
-
-                    self.logger.info(f"取得中: {name}({code})")
-
-                    match country:
-                        case "ja":
-                            page.goto(
-                                f'{self.config["base_url"]}/{code}.T',
-                                wait_until="networkidle"
-                            )
-
-                            # 取得先画面のUI変更があった場合に失敗する可能性大
-                            company_name = page.locator("h2").filter(
-                                has_text="(株)"
-                            ).first.inner_text()
-
-                            price_text = (
-                                # 取得先画面のUI変更があった場合に失敗する可能性大
-                                page.locator('[class*="_CommonPriceBoard__priceBlock"]')
-                                    .locator('[class*="_StyledNumber__value"]')
-                                    .first
-                                    .inner_text()
-                            )
-                            price_text = price_text.replace(",", "")
-
-                        case "us":
-                            page.goto(
-                                f'{self.config["base_url"]}/{code}',
-                                wait_until="networkidle"
-                            )
-
-                            company_name = (
-                                # 取得先画面のUI変更があった場合に失敗する可能性大
-                                page.locator('h2[class*="PriceBoard__name__"]')
-                                .first
-                                .inner_text()
-                            )
-                            price_text = (
-                                # 取得先画面のUI変更があった場合に失敗する可能性大
-                                page.locator(
-                                    '[class*="PriceBoard"] span[class*="StyledNumber__value__"]'
-                                ).first.inner_text()
-                            )
-                            price_text = price_text.replace(",", "")
-
-                    if "." in price_text:
-                        price = float(price_text)
-                    else:
-                        price = int(price_text)
-
-                    result.append([
-                        code,
-                        company_name,
-                        country,
-                        price
-                    ])
-
-                    self.logger.info(f"{company_name}, {price}")
-
-                browser.close()
-
-        except TimeoutError:
-            self.logger.error("タイムアウトが発生しました。")
-
-        except Error as e:
-            if "ERR_INTERNET_DISCONNECTED" in str(e):
-                self.logger.error("インターネット接続なし")
-            else:
-                self.logger.exception("Playwrightエラー")
-        except Exception:
-            self.logger.exception("予期しないエラー")
-
-        self.logger.info("株価取得処理終了")
-
-        return result

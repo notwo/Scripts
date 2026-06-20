@@ -15,7 +15,7 @@ browser:
   width: 1920
   height: 1080
   timeout: 60000
-  headless_mode: False
+  headless_mode: False # Trueにするとアクセス時に403 Forbiddenとなってしまうので、実質False固定
 log:
   filepath: log
   filename: ipo_manager.log
