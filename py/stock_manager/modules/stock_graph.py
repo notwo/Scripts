@@ -3,6 +3,7 @@ from datetime import datetime
 from enum import Enum
 from typing import TypeAlias
 
+import matplotlib.dates as mdates
 import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -10,7 +11,6 @@ from matplotlib.backends.backend_pdf import PdfPages
 
 from modules.logger import Logger
 from modules.util import Util
-
 
 StockByDay: TypeAlias = tuple[str, str, str, int | float]
 
@@ -56,45 +56,87 @@ class StockGraph:
             )
             return
 
-        # 折れ線グラフを作成
+        # 日付型に変換
+        country_df = country_df.copy()
+        country_df["日付"] = (
+            pd.to_datetime(country_df["日付"])
+            .dt.normalize()
+        )
+
+        pivot_df = country_df.pivot_table(
+            index="日付",
+            columns="銘柄",
+            values="株価",
+            aggfunc="last"
+        )
+
+        pivot_df = pivot_df.sort_index()
+
         plt.figure(figsize=(8, 6))
 
-        for category, group in country_df.groupby("銘柄"):
+        for column in pivot_df.columns:
             plt.plot(
-                group["日付"],
-                group["株価"],
+                pivot_df.index,
+                pivot_df[column],
                 marker="o",
-                label=category
+                label=column
             )
 
+        ax = plt.gca()
+
+        ax.xaxis.set_major_formatter(
+            mdates.DateFormatter("%m/%d")
+        )
+
+        ax.xaxis.set_major_locator(
+            mdates.DayLocator(interval=1)
+        )
+
+        plt.xticks(rotation=0)
+
         # グラフの装飾
-        plt.title("日本株推移" if country == "ja" else "米国株推移")
+        plt.title(
+            "日本株推移" if country == "ja"
+            else "米国株推移"
+        )
+
         plt.xlabel("日付")
-        plt.ylabel("株価(＄)" if country == "ja" else "株価(￥)")
+
+        plt.ylabel(
+            "株価(￥)" if country == "ja"
+            else "株価(＄)"
+        )
+
         plt.legend()
         plt.tight_layout()
 
         # PDF出力
         self.logger.info("PDF出力")
+
         with PdfPages(output_file) as pdf:
             pdf.savefig()
             plt.close()
 
-    def create_graph_on_pdf(self, stocks_by_day: list[StockByDay]) -> None:
+    def create_graph_on_pdf(
+        self,
+        stocks_by_day: list[StockByDay]
+    ) -> None:
+
         self.logger.info("グラフ作成開始")
 
-        # データをDataFrameに変換
-        df = pd.DataFrame(stocks_by_day, columns=self.config["pdf"]["header"])
+        df = pd.DataFrame(
+            stocks_by_day,
+            columns=self.config["pdf"]["header"]
+        )
 
-        # 日付をdatetime型に変換
-        df["Date"] = pd.to_datetime(df["日付"])
+        df["日付"] = pd.to_datetime(df["日付"])
 
-        # グラフ作成
         self._create_country_graph(
             df,
             "ja",
             f'{self.config["pdf"]["filepath"]}/日本株チャート.pdf'
         )
+
         self._create_country_graph(
             df,
             "us",
