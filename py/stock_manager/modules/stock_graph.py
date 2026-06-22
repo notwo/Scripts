@@ -116,7 +116,9 @@ class StockGraph:
             else "株価(＄)"
         )
 
-        plt.legend()
+        plt.legend(
+            fontsize=7,
+        )
         plt.tight_layout()
 
         # PDF出力
