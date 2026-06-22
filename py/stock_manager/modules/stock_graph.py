@@ -74,6 +74,15 @@ class StockGraph:
 
         plt.figure(figsize=(8, 6))
 
+        _, sub_ax = plt.subplots(figsize=(10, 5))
+
+        # 横方向の点線グリッド
+        sub_ax.grid(
+            axis='y',       # y軸目盛りに合わせる
+            linestyle='--', # 点線
+            linewidth=0.5
+        )
+
         for column in pivot_df.columns:
             plt.plot(
                 pivot_df.index,
