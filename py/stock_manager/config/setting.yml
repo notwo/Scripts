@@ -1,17 +1,34 @@
 # 以下の形式で記述すること
-# pages:
+# base_url: 株価取得先URL
+# stocks:
 #  - name: 上場企業名
 #    country: ja or us(ja: 日本株、us: 米国株)
 #    code: 企業コード
 #    category: 企業の業種。現在未使用(備考代わり)
 #  ...
 # csv:
+#  - filepath: 出力先ディレクトリ
 #  - filename: 出力先CSVファイル名
+#  - header: ヘッダ
+# pdf:
+#  - filepath: 出力先ディレクトリ
 #  - header: ヘッダ
 # browser:
 #   width: 起動するブラウザ(Chrome)の横幅
 #   height: 起動するブラウザ(Chrome)の横幅
 #   timeout: アクセス時タイムアウト値(ms)
+#   headless_mode: ヘッドレスモードかどうか(基本どちらでも動作する)
+# log:
+#   filepath: ログファイルパス
+#   filename: ログファイル名
+# mail:
+#   smtp_server: smtp.gmail.com
+#   smtp_port: 587
+#   subject: 株価レポート
+# mode:
+#   csv: 株価取得するか
+#   pdf: PDF作成するか
+#   mail: メール送信するか
 
 base_url: https://finance.yahoo.co.jp/quote
 stocks:
@@ -42,3 +59,11 @@ browser:
 log:
   filepath: log
   filename: stock_manager.log
+mail:
+  smtp_server: smtp.gmail.com
+  smtp_port: 587
+  subject: 株価レポート
+mode:
+  csv: 株価取得するか
+  pdf: PDF作成するか
+  mail: メール送信するか

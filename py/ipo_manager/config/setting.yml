@@ -4,9 +4,12 @@
 #    url: スクリーンショット取得したい画面URL
 #  ...
 # browser:
-# width: 起動するブラウザ(Chrome)の横幅
-# height: 起動するブラウザ(Chrome)の横幅
+#   width: 起動するブラウザ(Chrome)の横幅
+#   height: 起動するブラウザ(Chrome)の横幅
 # timeout: アクセス時タイムアウト値(ms)
+# log:
+#   filepath: ログファイルパス
+#   filename: ログファイル名
 
 pages:
   - name: スクリーンショット名
