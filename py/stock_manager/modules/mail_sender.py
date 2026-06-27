@@ -20,8 +20,9 @@ class MailSender:
             print(f"設定ファイルの読み込みに失敗しました: {filename}")
 
         self.logger = Logger.get_logger(
-            self.config["log"]["filepath"],
-            self.config["log"]["filename"]
+            log_dir=self.config["log"]["filepath"],
+            logfile=self.config["log"]["filename"],
+            reload=True
         )
 
         self.sender = sender
