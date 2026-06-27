@@ -12,6 +12,7 @@
 
 # files
 /py/*/*.csv
+/py/*/*/*.csv
 /py/*/*.pdf
 /py/*/*.txt
 /py/*/*.ttf
