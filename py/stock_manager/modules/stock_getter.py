@@ -1,5 +1,6 @@
 import csv
 import os
+from dataclasses import dataclass
 from datetime import datetime
 from typing import TypeAlias
 
@@ -8,8 +9,15 @@ from playwright.sync_api import Error, TimeoutError, sync_playwright
 from modules.logger import Logger
 from modules.util import Util
 
-
 StockInfo: TypeAlias = list[int | str | float]
+
+
+@dataclass(slots=True)
+class StockData:
+    name: str
+    country: str
+    code: str
+    category: str
 
 
 class StockGetter:
@@ -28,7 +36,33 @@ class StockGetter:
             logfile=self.config["log"]["filename"],
             reload=True
         )
-        self.stocks = self.config["stocks"]
+        self.stocks = self._load_comanies_csv()
+
+    def _load_comanies_csv(self) -> list[StockData]:
+        file_path = f'{self.config["companies"]["filepath"]}/{self.config["companies"]["filename"]}'
+
+        stocks = []
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+
+                for row in reader:
+                    stock = StockData(
+                        name=row["企業名"],
+                        country=row["国"],
+                        code=row["銘柄コード"],
+                        category=row["カテゴリ"],
+                    )
+                    stocks.append(stock)
+
+        except FileNotFoundError:
+            self.logger.error(f"CSVファイルが存在しません: {file_path}")
+        except UnicodeDecodeError:
+            self.logger.error(f"CSVファイルの文字コードがUTF-8ではありません: {file_path}")
+        except Exception:
+            self.logger.exception(f"CSVファイルの読み込みに失敗しました: {file_path}")
+
+        return stocks
 
     def _get_ja_stock(
         self,
@@ -110,9 +144,9 @@ class StockGetter:
                 page = browser.new_page()
 
                 for stock in self.stocks:
-                    name = stock["name"]
-                    code = stock["code"]
-                    country = stock["country"]
+                    name = stock.name
+                    code = stock.code
+                    country = stock.country
 
                     self.logger.info(f"取得中: {name}({code})")
 

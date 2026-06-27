@@ -1,6 +1,98 @@
 from unittest.mock import Mock, mock_open, patch
 
-from modules.stock_getter import StockGetter
+from modules.stock_getter import StockData, StockGetter
+
+
+def test_load_companies_csv():
+    csv_data = """企業名,国,銘柄コード,カテゴリ
+任天堂,ja,7974,ゲーム
+EPAM Systems,us,EPAM,IT
+"""
+
+    m = mock_open(read_data=csv_data)
+
+    with patch("builtins.open", m):
+
+        getter = StockGetter.__new__(StockGetter)
+
+        getter.logger = Mock()
+
+        getter.config = {
+            "companies": {
+                "filepath": ".",
+                "filename": "companies.csv"
+            }
+        }
+
+        result = getter._load_comanies_csv()
+
+        assert result == [
+            StockData(
+                name="任天堂",
+                country="ja",
+                code="7974",
+                category="ゲーム"
+            ),
+            StockData(
+                name="EPAM Systems",
+                country="us",
+                code="EPAM",
+                category="IT"
+            )
+        ]
+
+
+@patch("builtins.open", side_effect=FileNotFoundError)
+def test_load_companies_csv_file_not_found(mock_open):
+
+    getter = StockGetter.__new__(StockGetter)
+
+    getter.logger = Mock()
+
+    getter.config = {
+        "companies": {
+            "filepath": ".",
+            "filename": "companies.csv"
+        }
+    }
+
+    result = getter._load_comanies_csv()
+
+    assert result == []
+
+    getter.logger.error.assert_called_once_with(
+        "CSVファイルが存在しません: ./companies.csv"
+    )
+
+
+@patch(
+    "builtins.open",
+    side_effect=UnicodeDecodeError(
+        "utf-8",
+        b"",
+        0,
+        1,
+        "decode error"
+    )
+)
+def test_load_companies_csv_unicode_error(mock_open):
+
+    getter = StockGetter.__new__(StockGetter)
+
+    getter.logger = Mock()
+
+    getter.config = {
+        "companies": {
+            "filepath": ".",
+            "filename": "companies.csv"
+        }
+    }
+
+    result = getter._load_comanies_csv()
+
+    assert result == []
+
+    getter.logger.error.assert_called_once()
 
 
 @patch("modules.stock_getter.sync_playwright")
@@ -14,13 +106,12 @@ def test_detect_stock_price_ja(mock_playwright):
         },
         "base_url": "https://finance.yahoo.co.jp/quote"
     }
-    getter.stocks = [
-        {
-            "name": "トヨタ",
-            "code": "7203",
-            "country": "ja"
-        }
-    ]
+    getter.stocks = [StockData(
+        name="トヨタ",
+        country="ja",
+        code="7203",
+        category="工業"
+    )]
 
     mock_page = Mock()
     mock_company_locator = Mock()
@@ -70,13 +161,12 @@ def test_detect_stock_price_us(mock_playwright):
         },
         "base_url": "https://finance.yahoo.co.jp/quote"
     }
-    getter.stocks = [
-        {
-            "name": "EPAM",
-            "code": "EPAM",
-            "country": "us"
-        }
-    ]
+    getter.stocks = [StockData(
+        name="イーパム・システムズ",
+        country="us",
+        code="EPAM",
+        category="AI"
+    )]
 
     mock_page = Mock()
     company_first = Mock()

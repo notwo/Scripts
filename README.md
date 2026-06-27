@@ -9,7 +9,11 @@ Gmailに溜まった、特定のラベルに属する不要メールを一括削
 
 株価情報を任意で取得/グラフ化/メール送信するスクリプト
 
-使い方はpowershellを開いて、py/stock_manager以下に移動し以下を実行する
+### 使い方
+
+config/companies.csvに、取得したい企業情報を追加する(1行につき1企業)
+
+powershellを開いて、py/stock_manager以下に移動し以下を実行する
 ```
 $env:MAIL_PASSWORD="<Gmailのアプリパスワード>"
 $env:SENDER="<送信元>"
