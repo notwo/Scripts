@@ -3,6 +3,6 @@
 #   pdf: PDF作成するか
 #   mail: メール送信するか
 mode:
-  csv: 株価取得するか
-  pdf: PDF作成するか
-  mail: メール送信するか
+  csv: True
+  pdf: True
+  mail: True
