@@ -6,8 +6,8 @@ class Logger:
     _logger = None
 
     @classmethod
-    def get_logger(self, log_dir: str, logfile: str, loglevel: int = logging.INFO):
-        if self._logger:
+    def get_logger(self, log_dir: str, logfile: str, loglevel: int = logging.INFO, reload: bool = False):
+        if self._logger and not reload:
             return self._logger
 
         log_dir = Path(log_dir)

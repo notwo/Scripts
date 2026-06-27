@@ -1,0 +1,22 @@
+# csv:
+#  - filepath: 出力先ディレクトリ
+#  - filename: 出力先CSVファイル名
+# pdf:
+#  - filepath: 出力先ディレクトリ
+#  - header: ヘッダ
+# log:
+#   filepath: ログファイルパス
+#   filename: ログファイル名
+csv:
+  filepath: dist
+  filename: stocks.csv
+pdf:
+  filepath: dist
+  header:
+    - 日付
+    - 銘柄
+    - 国
+    - 株価
+log:
+  filepath: log
+  filename: stock_graph.log

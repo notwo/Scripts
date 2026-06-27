@@ -31,15 +31,17 @@ class StockGraph:
         try:
             self.config = Util.load_config(filename)
         except FileNotFoundError:
-            self.logger.error(f"設定ファイルが存在しません: {filename}")
+            print(f"設定ファイルが存在しません: {filename}")
         except UnicodeDecodeError:
-            self.logger.error(f"設定ファイルの文字コードがUTF-8ではありません: {filename}")
+            print(f"設定ファイルの文字コードがUTF-8ではありません: {filename}")
         except Exception:
-            self.logger.exception(f"設定ファイルの読み込みに失敗しました: {filename}")
+            print(f"設定ファイルの読み込みに失敗しました: {filename}")
 
         self.logger = Logger.get_logger(
-            self.config["log"]["filepath"],
-            self.config["log"]["filename"])
+            log_dir=self.config["log"]["filepath"],
+            logfile=self.config["log"]["filename"],
+            reload=True
+        )
 
     def _create_country_graph(
         self,
