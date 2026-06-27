@@ -10,9 +10,6 @@
 #  - filepath: 出力先ディレクトリ
 #  - filename: 出力先CSVファイル名
 #  - header: ヘッダ
-# pdf:
-#  - filepath: 出力先ディレクトリ
-#  - header: ヘッダ
 # browser:
 #   width: 起動するブラウザ(Chrome)の横幅
 #   height: 起動するブラウザ(Chrome)の横幅
@@ -21,15 +18,6 @@
 # log:
 #   filepath: ログファイルパス
 #   filename: ログファイル名
-# mail:
-#   smtp_server: smtp.gmail.com
-#   smtp_port: 587
-#   subject: 株価レポート
-# mode:
-#   csv: 株価取得するか
-#   pdf: PDF作成するか
-#   mail: メール送信するか
-
 base_url: https://finance.yahoo.co.jp/quote
 stocks:
   - name: 企業名
@@ -44,13 +32,6 @@ csv:
     - 銘柄コード
     - 銘柄名
     - 株価(円)
-pdf:
-  filepath: dist
-  header:
-    - 日付
-    - 銘柄
-    - 国
-    - 株価
 browser:
   width: 1920
   height: 1080
@@ -58,12 +39,4 @@ browser:
   headless_mode: True
 log:
   filepath: log
-  filename: stock_manager.log
-mail:
-  smtp_server: smtp.gmail.com
-  smtp_port: 587
-  subject: 株価レポート
-mode:
-  csv: 株価取得するか
-  pdf: PDF作成するか
-  mail: メール送信するか
+  filename: stock_getter.log

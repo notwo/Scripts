@@ -1,10 +1,10 @@
 from services.stock_service import StockService
 
-CONFIG_FILE = "config/setting.yml"
+CONFIG_FILE_PATH = "config"
 
 
 def main():
-    service = StockService(CONFIG_FILE)
+    service = StockService(CONFIG_FILE_PATH)
     service.execute()
 
 

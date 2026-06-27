@@ -10,7 +10,15 @@ class MailSender:
 
     def __init__(self, sender: str, password: str, tos: str,filename: str):
 
-        self.config = Util.load_config(filename)
+        try:
+            self.config = Util.load_config(filename)
+        except FileNotFoundError:
+            print(f"設定ファイルが存在しません: {filename}")
+        except UnicodeDecodeError:
+            print(f"設定ファイルの文字コードがUTF-8ではありません: {filename}")
+        except Exception:
+            print(f"設定ファイルの読み込みに失敗しました: {filename}")
+
         self.logger = Logger.get_logger(
             self.config["log"]["filepath"],
             self.config["log"]["filename"]

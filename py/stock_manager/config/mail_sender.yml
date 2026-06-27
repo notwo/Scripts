@@ -1,0 +1,14 @@
+# mail:
+#   smtp_server: smtp.gmail.com
+#   smtp_port: 587
+#   subject: 株価レポート
+# log:
+#   filepath: ログファイルパス
+#   filename: ログファイル名
+mail:
+  smtp_server: smtp.gmail.com
+  smtp_port: 587
+  subject: 株価レポート
+log:
+  filepath: log
+  filename: mail_sender.log
