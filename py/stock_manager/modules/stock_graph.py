@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 import csv
 from datetime import datetime
 from enum import Enum
@@ -15,26 +16,28 @@ from modules.util import Util
 StockByDay: TypeAlias = tuple[str, str, str, int | float]
 
 
-class StockDataRow(Enum):
-    DATE = 0
-    CODE = 1
-    CODE_NAME = 2
-    COUNTRY = 3
-    PRICE = 4
+@dataclass(slots=True)
+class StockData:
+    date: str
+    code: str
+    code_name: str
+    country: str
+    price: float
+
+
+# グラフの日本語文字フォント設定
+plt.rcParams["font.family"] = "Yu Gothic"
 
 
 class StockGraph:
     def __init__(self, filename: str) -> None:
-        # グラフの日本語文字フォント設定
-        plt.rcParams["font.family"] = "Yu Gothic"
-
         try:
             self.config = Util.load_config(filename)
         except FileNotFoundError:
             print(f"設定ファイルが存在しません: {filename}")
         except UnicodeDecodeError:
             print(f"設定ファイルの文字コードがUTF-8ではありません: {filename}")
-        except Exception:
+        except Exception as e:
             print(f"設定ファイルの読み込みに失敗しました: {filename}")
 
         self.logger = Logger.get_logger(
@@ -58,15 +61,15 @@ class StockGraph:
             )
             return
 
-        # 日付型に変換
+        # 日時型に変換
         country_df = country_df.copy()
-        country_df["日付"] = (
-            pd.to_datetime(country_df["日付"])
+        country_df["日時"] = (
+            pd.to_datetime(country_df["日時"])
             .dt.normalize()
         )
 
         pivot_df = country_df.pivot_table(
-            index="日付",
+            index="日時",
             columns="銘柄",
             values="株価",
             aggfunc="last"
@@ -74,9 +77,7 @@ class StockGraph:
 
         pivot_df = pivot_df.sort_index()
 
-        plt.figure(figsize=(8, 6))
-
-        _, sub_ax = plt.subplots(figsize=(10, 5))
+        fig, sub_ax = plt.subplots(figsize=(10, 5))
 
         # 横方向の点線グリッド
         sub_ax.grid(
@@ -86,49 +87,45 @@ class StockGraph:
         )
 
         for column in pivot_df.columns:
-            plt.plot(
+            sub_ax.plot(
                 pivot_df.index,
                 pivot_df[column],
                 marker="o",
                 label=column
             )
 
-        ax = plt.gca()
-
-        ax.xaxis.set_major_formatter(
+        sub_ax.xaxis.set_major_formatter(
             mdates.DateFormatter("%m/%d")
         )
 
-        ax.xaxis.set_major_locator(
+        sub_ax.xaxis.set_major_locator(
             mdates.DayLocator(interval=1)
         )
 
-        plt.xticks(rotation=0)
-
         # グラフの装飾
-        plt.title(
+        sub_ax.set_title(
             "日本株推移" if country == "ja"
             else "米国株推移"
         )
 
-        plt.xlabel("日付")
+        sub_ax.set_xlabel("日付")
 
-        plt.ylabel(
+        sub_ax.set_ylabel(
             "株価(￥)" if country == "ja"
             else "株価(＄)"
         )
 
-        plt.legend(
+        sub_ax.legend(
             fontsize=7,
         )
-        plt.tight_layout()
+        fig.tight_layout()
 
         # PDF出力
         self.logger.info("PDF出力")
 
         with PdfPages(output_file) as pdf:
-            pdf.savefig()
-            plt.close()
+            pdf.savefig(fig)
+            plt.close(fig)
 
     def create_graph_on_pdf(
         self,
@@ -142,7 +139,7 @@ class StockGraph:
             columns=self.config["pdf"]["header"]
         )
 
-        df["日付"] = pd.to_datetime(df["日付"])
+        df["日時"] = pd.to_datetime(df["日付"])
 
         self._create_country_graph(
             df,
@@ -165,13 +162,18 @@ class StockGraph:
         stocks = []
         try:
             with open(file_path, "r", encoding="utf-8") as f:
-                reader = csv.reader(f)
-                next(reader)
+                reader = csv.DictReader(f)
 
                 for row in reader:
-                    stocks.append(row)
-                    if not row:
-                        break
+                    stock = StockData(
+                        date=row["日時"],
+                        code=row["銘柄コード"],
+                        code_name=row["銘柄名"],
+                        country=row["国"],
+                        price=float(row["株価(円)"]),
+                    )
+                    stocks.append(stock)
+
         except FileNotFoundError:
             self.logger.error(f"CSVファイルが存在しません: {file_path}")
         except UnicodeDecodeError:
@@ -184,18 +186,13 @@ class StockGraph:
         self.logger.info("データ整形開始")
         new_arr = []
         for stock in stocks:
-            date = stock[StockDataRow.DATE.value].split(" ")[0]
+            date = stock.date.split(" ")[0]
             code = (
-                f"{stock[StockDataRow.CODE.value]}({stock[StockDataRow.CODE_NAME.value]})"
+                f"{stock.code}({stock.code_name})"
             )
-            price_text = stock[StockDataRow.PRICE.value]
-            if "." in price_text:
-                price = float(price_text)
-            else:
-                price = int(price_text)
+            price = stock.price
 
-            country = stock[StockDataRow.COUNTRY.value]
-
+            country = stock.country
             new_arr.append([
                 date,
                 code,
@@ -203,9 +200,9 @@ class StockGraph:
                 price
             ])
 
-        # データ全体を日付でソート
+        # データ全体を日時でソート
         new_arr.sort(
-            key=lambda x: datetime.strptime(x[StockDataRow.DATE.value], "%Y/%m/%d")
+            key=lambda x: datetime.strptime(x[0], "%Y/%m/%d")
         )
 
         # pandasで頭2つの要素(日時,銘柄コード)から重複を削除

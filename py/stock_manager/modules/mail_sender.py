@@ -8,38 +8,20 @@ from modules.util import Util
 
 class MailSender:
 
-    def __init__(self, sender: str, password: str, tos: str,filename: str):
+    def __init__(self, sender: str, password: str, tos: list[str], filename: str):
 
-        try:
-            self.config = Util.load_config(filename)
-        except FileNotFoundError:
-            print(f"設定ファイルが存在しません: {filename}")
-        except UnicodeDecodeError:
-            print(f"設定ファイルの文字コードがUTF-8ではありません: {filename}")
-        except Exception:
-            print(f"設定ファイルの読み込みに失敗しました: {filename}")
+        self.config = Util.load_config(filename)
 
         self.logger = Logger.get_logger(
-            log_dir=self.config["log"]["filepath"],
-            logfile=self.config["log"]["filename"],
-            reload=True
+            self.config["log"]["filepath"],
+            self.config["log"]["filename"]
         )
 
         self.sender = sender
         self.password = password
         self.tos = tos
 
-    def send_mail(
-        self,
-        body: str,
-        attachment_files: list[str]
-    ) -> None:
-
-        self.logger.info("メール送信開始")
-
-        if not self.password or not self.sender or not self.tos:
-            self.logger.warning("password,sender,toを設定してください")
-            return
+    def _create_message(self, body: str) -> EmailMessage:
 
         mail_config = self.config["mail"]
 
@@ -50,6 +32,14 @@ class MailSender:
         msg["To"] = ",".join(self.tos)
 
         msg.set_content(body)
+
+        return msg
+
+    def _attach_files(
+        self,
+        msg: EmailMessage,
+        attachment_files: list[str]
+    ) -> None:
 
         for file_path in attachment_files:
 
@@ -64,6 +54,13 @@ class MailSender:
                     filename=path.name
                 )
 
+    def _send(
+        self,
+        msg: EmailMessage
+    ) -> None:
+
+        mail_config = self.config["mail"]
+
         with smtplib.SMTP(
             mail_config["smtp_server"],
             mail_config["smtp_port"]
@@ -77,5 +74,26 @@ class MailSender:
             )
 
             smtp.send_message(msg)
+
+    def send_mail(
+        self,
+        body: str,
+        attachment_files: list[str]
+    ) -> None:
+
+        self.logger.info("メール送信開始")
+
+        if not self.password or not self.sender or not self.tos:
+            self.logger.warning("password,sender,toを設定してください")
+            return
+
+        msg = self._create_message(body)
+
+        self._attach_files(
+            msg,
+            attachment_files
+        )
+
+        self._send(msg)
 
         self.logger.info("メール送信終了")

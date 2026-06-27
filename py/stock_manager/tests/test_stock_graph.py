@@ -5,10 +5,9 @@ import pandas as pd
 from modules.stock_graph import StockGraph
 
 
-@patch("builtins.open", new_callable=mock_open)
-def test_format_array_from_csv(mock_file):
+def test_format_array_from_csv():
 
-    csv_data = """日付,コード,銘柄名,国,株価
+    csv_data = """日時,銘柄コード,銘柄名,国,株価(円)
 2025/01/02 10:00:00,7203,トヨタ,ja,3000
 2025/01/01 10:00:00,AAPL,Apple,us,200
 2025/01/02 11:00:00,7203,トヨタ,ja,3000
@@ -85,7 +84,7 @@ def test_create_country_graph_empty():
     graph.logger = Mock()
 
     df = pd.DataFrame(
-        columns=["日付", "銘柄", "国", "株価"]
+        columns=["日時", "銘柄", "国", "株価"]
     )
 
     graph._create_country_graph(
@@ -98,10 +97,8 @@ def test_create_country_graph_empty():
 
 
 @patch("modules.stock_graph.PdfPages")
-@patch("modules.stock_graph.plt")
 def test_create_country_graph(
-    mock_plt,
-    mock_pdf_pages
+    mock_pdf_pages,
 ):
 
     graph = StockGraph.__new__(StockGraph)
@@ -116,7 +113,7 @@ def test_create_country_graph(
             200
         ]
     ], columns=[
-        "日付",
+        "日時",
         "銘柄",
         "国",
         "株価"
@@ -128,6 +125,4 @@ def test_create_country_graph(
         "us.pdf"
     )
 
-    mock_plt.figure.assert_called_once()
-    mock_plt.plot.assert_called_once()
-    mock_plt.title.assert_called_once()
+    mock_pdf_pages.assert_called_once_with("us.pdf")
