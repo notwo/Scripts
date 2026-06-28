@@ -1,5 +1,5 @@
 import os
-
+from pathlib import Path
 from modules.mail_sender import MailSender
 from modules.stock_getter import StockGetter
 from modules.stock_graph import StockGraph
@@ -19,6 +19,17 @@ class StockService:
             print(f"設定ファイルの文字コードがUTF-8ではありません: {filename}")
         except Exception:
             print(f"設定ファイルの読み込みに失敗しました: {filename}")
+
+    def _specify_attachment_files(self) -> list[str]:
+        dist_dir = Path("dist")
+
+        attachment_files = [
+            str(path).replace("\\", "/")
+            for path in dist_dir.iterdir()
+            if path.is_file()
+        ]
+
+        return attachment_files
 
     def execute(self) -> None:
         # 株価取得
@@ -48,8 +59,5 @@ class StockService:
 
             mail.send_mail(
                 body="株価レポートを送付します。",
-                attachment_files=[
-                    "dist/日本株チャート.pdf",
-                    "dist/米国株チャート.pdf"
-                ]
+                attachment_files=self._specify_attachment_files()
             )

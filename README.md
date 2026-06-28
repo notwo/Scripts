@@ -11,7 +11,10 @@ Gmailに溜まった、特定のラベルに属する不要メールを一括削
 
 ### 使い方
 
+#### 事前準備
 config/companies.csvに、取得したい企業情報を追加する(1行につき1企業)
+
+#### 手順
 
 powershellを開いて、py/stock_manager以下に移動し以下を実行する
 ```
@@ -33,10 +36,14 @@ python main.py
 
 #### 概要
 - stock_getter.pyで作成した株価情報(stocks.csv)のデータをグラフ化し、PDF出力する
+- PDFは国名アルファベット_業種名.pdfの形式で1つまたは複数作成される
 - stock_getter.pyの直後に実行される
 
 ### py/stock_manager/mail_sender.py
+
+#### 概要
 - stock_graph.pyで作成したPDFを添付して宛先へメール送信する
+- stock_getter.pyで作成したCSVとstock_graph.pyで作成したPDFをすべて添付
 - stock_graph.pyの直後に実行される
 
 

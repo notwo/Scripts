@@ -17,6 +17,7 @@ pdf:
     - 銘柄
     - 国
     - 株価
+    - カテゴリ
 log:
   filepath: log
   filename: stock_graph.log
