@@ -55,8 +55,10 @@ python main.py
 
 ### 使い方
 
-1. 事前準備として、config/setting.ymlのpages:以下にスクショ取得したい企業名とURLを記載する(複数可)
+1. 事前準備として、config/pages.csvにスクショ取得したい企業名とURLを記載する(複数可)
 1. 以下を実行
 ```bash
 python main.py
 ```
+
+詳細な設定についてはconfig/以下ymlファイルを参照すること
