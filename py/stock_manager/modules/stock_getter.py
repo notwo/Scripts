@@ -76,16 +76,16 @@ class StockGetter:
 
         company_name = (
             page.locator("h2")
-            .filter(has_text="(株)")
-            .first
-            .inner_text()
+                .filter(has_text="(株)")
+                .first
+                .inner_text()
         )
 
         price_text = (
             page.locator('[class*="_CommonPriceBoard__priceBlock"]')
-            .locator('[class*="_StyledNumber__value"]')
-            .first
-            .inner_text()
+                .locator('[class*="_StyledNumber__value"]')
+                .first
+                .inner_text()
         )
 
         price_text = price_text.replace(",", "")
@@ -147,6 +147,7 @@ class StockGetter:
                     name = stock.name
                     code = stock.code
                     country = stock.country
+                    category = stock.category
 
                     self.logger.info(f"取得中: {name}({code})")
 
@@ -177,7 +178,8 @@ class StockGetter:
                         code,
                         company_name,
                         country,
-                        price
+                        price,
+                        category
                     ])
 
                     self.logger.info(f"{company_name}, {price}")

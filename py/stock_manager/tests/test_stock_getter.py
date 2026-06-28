@@ -6,7 +6,7 @@ from modules.stock_getter import StockData, StockGetter
 def test_load_companies_csv():
     csv_data = """企業名,国,銘柄コード,カテゴリ
 任天堂,ja,7974,ゲーム
-EPAM Systems,us,EPAM,IT
+EPAM Systems,us,EPAM,AI
 """
 
     m = mock_open(read_data=csv_data)
@@ -37,7 +37,7 @@ EPAM Systems,us,EPAM,IT
                 name="EPAM Systems",
                 country="us",
                 code="EPAM",
-                category="IT"
+                category="AI"
             )
         ]
 
@@ -145,7 +145,8 @@ def test_detect_stock_price_ja(mock_playwright):
             "7203",
             "トヨタ自動車(株)",
             "ja",
-            2850
+            2850,
+            "工業"
         ]
     ]
 
@@ -196,7 +197,8 @@ def test_detect_stock_price_us(mock_playwright):
             "EPAM",
             "EPAM Systems",
             "us",
-            150.25
+            150.25,
+            "AI"
         ]
     ]
 
@@ -220,7 +222,8 @@ def test_file_to_csv(mock_exists, mock_file):
                 "Code",
                 "Name",
                 "Country",
-                "Price"
+                "Price",
+                "Category"
             ]
         }
     }
@@ -230,7 +233,8 @@ def test_file_to_csv(mock_exists, mock_file):
             "7203",
             "トヨタ自動車",
             "ja",
-            2850
+            2850,
+            "工業"
         ]
     ]
 

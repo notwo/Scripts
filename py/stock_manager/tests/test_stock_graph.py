@@ -1,16 +1,13 @@
 from unittest.mock import Mock, mock_open, patch
 
-import pandas as pd
-
 from modules.stock_graph import StockGraph
 
 
 def test_format_array_from_csv():
-
-    csv_data = """日時,銘柄コード,銘柄名,国,株価(円)
-2025/01/02 10:00:00,7203,トヨタ,ja,3000
-2025/01/01 10:00:00,AAPL,Apple,us,200
-2025/01/02 11:00:00,7203,トヨタ,ja,3000
+    csv_data = """日時,銘柄コード,銘柄名,国,株価(円),カテゴリ
+2025/01/02 10:00:00,7203,トヨタ,ja,3000,工業
+2025/01/01 10:00:00,AAPL,Apple,us,200,IT
+2025/01/02 11:00:00,7203,トヨタ,ja,3000,工業
 """
 
     m = mock_open(read_data=csv_data)
@@ -31,13 +28,13 @@ def test_format_array_from_csv():
         result = getter.format_array_from_csv()
 
         assert result == [
-            ["2025/01/01", "AAPL(Apple)", "us", 200],
-            ["2025/01/02", "7203(トヨタ)", "ja", 3000]
+            ["2025/01/01", "AAPL(Apple)", "us", 200, "IT"],
+            ["2025/01/02", "7203(トヨタ)", "ja", 3000, "工業"]
         ]
 
 
-@patch.object(StockGraph, "_create_country_graph")
-def test_create_graph_on_pdf(mock_create):
+@patch.object(StockGraph, "_create_graph")
+def test_create_graph(mock_create):
 
     graph = StockGraph.__new__(StockGraph)
 
@@ -49,80 +46,33 @@ def test_create_graph_on_pdf(mock_create):
                 "日付",
                 "銘柄",
                 "国",
-                "株価"
+                "株価",
+                "カテゴリ"
             ],
             "filepath": "pdf"
         }
     }
 
     stocks = [
-        ["2025/01/01", "AAPL(Apple)", "us", 200],
-        ["2025/01/01", "7203(トヨタ)", "ja", 3000]
+        ["2025/01/01", "AAPL(Apple)", "us", 200, "IT"],
+        ["2025/01/01", "7203(トヨタ)", "ja", 3000, "工業"]
     ]
 
     graph.create_graph_on_pdf(stocks)
 
     assert mock_create.call_count == 2
 
-    mock_create.assert_any_call(
-        mock_create.call_args_list[0][0][0],
+    args1 = mock_create.call_args_list[0].args
+    args2 = mock_create.call_args_list[1].args
+
+    assert args1[1:] == (
         "ja",
-        "pdf/日本株チャート.pdf"
+        "工業",
+        "pdf/ja_工業.pdf",
     )
 
-    mock_create.assert_any_call(
-        mock_create.call_args_list[1][0][0],
+    assert args2[1:] == (
         "us",
-        "pdf/米国株チャート.pdf"
+        "IT",
+        "pdf/us_IT.pdf",
     )
-
-
-def test_create_country_graph_empty():
-
-    graph = StockGraph.__new__(StockGraph)
-
-    graph.logger = Mock()
-
-    df = pd.DataFrame(
-        columns=["日時", "銘柄", "国", "株価"]
-    )
-
-    graph._create_country_graph(
-        df,
-        "ja",
-        "dummy.pdf"
-    )
-
-    graph.logger.warning.assert_called_once()
-
-
-@patch("modules.stock_graph.PdfPages")
-def test_create_country_graph(
-    mock_pdf_pages,
-):
-
-    graph = StockGraph.__new__(StockGraph)
-
-    graph.logger = Mock()
-
-    df = pd.DataFrame([
-        [
-            "2025/01/01",
-            "AAPL(Apple)",
-            "us",
-            200
-        ]
-    ], columns=[
-        "日時",
-        "銘柄",
-        "国",
-        "株価"
-    ])
-
-    graph._create_country_graph(
-        df,
-        "us",
-        "us.pdf"
-    )
-
-    mock_pdf_pages.assert_called_once_with("us.pdf")

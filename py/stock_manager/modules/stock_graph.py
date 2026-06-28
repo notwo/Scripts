@@ -1,7 +1,6 @@
 import csv
 from dataclasses import dataclass
 from datetime import datetime
-from enum import Enum
 from typing import TypeAlias
 
 import matplotlib.dates as mdates
@@ -13,7 +12,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 from modules.logger import Logger
 from modules.util import Util
 
-StockByDay: TypeAlias = tuple[str, str, str, int | float]
+StockByDay: TypeAlias = tuple[str, str, str, int | float, str] # 日付, 銘柄, 国, 株価, カテゴリ
 
 
 @dataclass(slots=True)
@@ -22,6 +21,7 @@ class StockData:
     code: str
     code_name: str
     country: str
+    category: str
     price: float
 
 
@@ -46,13 +46,13 @@ class StockGraph:
             reload=True
         )
 
-    def _create_country_graph(
+    def _create_graph(
         self,
         df: pd.DataFrame,
         country: str,
+        category: str,
         output_file: str
     ) -> None:
-
         country_df = df[df["国"] == country]
 
         if country_df.empty:
@@ -104,14 +104,14 @@ class StockGraph:
 
         # グラフの装飾
         sub_ax.set_title(
-            "日本株推移" if country == "ja"
-            else "米国株推移"
+            f"{'日本株' if country == 'ja' else '米国株'} - {category}"
         )
 
         sub_ax.set_xlabel("日付")
 
         sub_ax.set_ylabel(
-            "株価(￥)" if country == "ja"
+            "株価(￥)"
+            if country == "ja"
             else "株価(＄)"
         )
 
@@ -141,17 +141,21 @@ class StockGraph:
 
         df["日時"] = pd.to_datetime(df["日付"])
 
-        self._create_country_graph(
-            df,
-            "ja",
-            f'{self.config["pdf"]["filepath"]}/日本株チャート.pdf'
-        )
+        # 国×カテゴリごとにPDF作成
+        grouped = df.groupby(["国", "カテゴリ"])
 
-        self._create_country_graph(
-            df,
-            "us",
-            f'{self.config["pdf"]["filepath"]}/米国株チャート.pdf'
-        )
+        for (country, category), group_df in grouped:
+            output_file = (
+                f'{self.config["pdf"]["filepath"]}/'
+                f'{country}_{category}.pdf'
+            )
+
+            self._create_graph(
+                group_df,
+                country,
+                category,
+                output_file
+            )
 
         self.logger.info("グラフ作成終了")
 
@@ -171,6 +175,7 @@ class StockGraph:
                         code_name=row["銘柄名"],
                         country=row["国"],
                         price=float(row["株価(円)"]),
+                        category=row["カテゴリ"],
                     )
                     stocks.append(stock)
 
@@ -190,14 +195,13 @@ class StockGraph:
             code = (
                 f"{stock.code}({stock.code_name})"
             )
-            price = stock.price
 
-            country = stock.country
             new_arr.append([
                 date,
                 code,
-                country,
-                price
+                stock.country,
+                stock.price,
+                stock.category
             ])
 
         # データ全体を日時でソート
@@ -208,7 +212,7 @@ class StockGraph:
         # pandasで頭2つの要素(日時,銘柄コード)から重複を削除
         df = pd.DataFrame(
             new_arr,
-            columns=["Date", "Code", "Country", "Price"]
+            columns=["Date", "Code", "Country", "Price", "Category"]
         )
         df = df.drop_duplicates(
             subset=["Date", "Code"]
