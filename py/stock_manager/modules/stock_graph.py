@@ -141,13 +141,16 @@ class StockGraph:
 
         df["日時"] = pd.to_datetime(df["日付"])
 
-        # 国×カテゴリごとにPDF作成
-        grouped = df.groupby(["国", "カテゴリ"])
+        # 年月列を追加
+        df["年月"] = df["日時"].dt.strftime("%Y%m")
 
-        for (country, category), group_df in grouped:
+        # 年月 × 国 × カテゴリごとにPDF作成
+        grouped = df.groupby(["年月", "国", "カテゴリ"])
+
+        for (yyyymm, country, category), group_df in grouped:
             output_file = (
                 f'{self.config["pdf"]["filepath"]}/'
-                f'{country}_{category}.pdf'
+                f'{country}_{category}_{yyyymm}.pdf'
             )
 
             self._create_graph(

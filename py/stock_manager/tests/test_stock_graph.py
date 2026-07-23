@@ -55,24 +55,25 @@ def test_create_graph(mock_create):
 
     stocks = [
         ["2025/01/01", "AAPL(Apple)", "us", 200, "IT"],
-        ["2025/01/01", "7203(トヨタ)", "ja", 3000, "工業"]
+        ["2025/01/01", "7203(トヨタ)", "ja", 3000, "工業"],
+        ["2025/02/01", "AAPL(Apple)", "us", 210, "IT"],
+        ["2025/02/01", "7203(トヨタ)", "ja", 3050, "工業"],
     ]
 
     graph.create_graph_on_pdf(stocks)
 
-    assert mock_create.call_count == 2
+    assert mock_create.call_count == 4
 
-    args1 = mock_create.call_args_list[0].args
-    args2 = mock_create.call_args_list[1].args
+    actual = {
+        (args.args[1], args.args[2], args.args[3])
+        for args in mock_create.call_args_list
+    }
 
-    assert args1[1:] == (
-        "ja",
-        "工業",
-        "pdf/ja_工業.pdf",
-    )
+    expected = {
+        ("ja", "工業", "pdf/ja_工業_202501.pdf"),
+        ("ja", "工業", "pdf/ja_工業_202502.pdf"),
+        ("us", "IT", "pdf/us_IT_202501.pdf"),
+        ("us", "IT", "pdf/us_IT_202502.pdf"),
+    }
 
-    assert args2[1:] == (
-        "us",
-        "IT",
-        "pdf/us_IT.pdf",
-    )
+    assert actual == expected
