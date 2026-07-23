@@ -107,9 +107,6 @@ class StockGraph:
         sub_ax.set_title(
             f"{month} {'日本株' if country == 'ja' else '米国株'} - {category}"
         )
-        #sub_ax.set_title(
-        #    f"{'日本株' if country == 'ja' else '米国株'} - {category}"
-        #)
 
         sub_ax.set_xlabel("日付")
 
@@ -126,10 +123,6 @@ class StockGraph:
 
         # PDF出力
         self.logger.info("PDF出力")
-
-        #with PdfPages(output_file) as pdf:
-        #    pdf.savefig(fig)
-        #    plt.close(fig)
 
         fig.tight_layout()
 
