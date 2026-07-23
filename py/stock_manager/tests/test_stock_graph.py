@@ -1,4 +1,4 @@
-from unittest.mock import Mock, mock_open, patch
+from unittest.mock import MagicMock, Mock, call, mock_open, patch
 
 from modules.stock_graph import StockGraph
 
@@ -33,8 +33,9 @@ def test_format_array_from_csv():
         ]
 
 
+@patch("modules.stock_graph.PdfPages")
 @patch.object(StockGraph, "_create_graph")
-def test_create_graph(mock_create):
+def test_create_graph(mock_create, mock_pdf):
 
     graph = StockGraph.__new__(StockGraph)
 
@@ -53,27 +54,30 @@ def test_create_graph(mock_create):
         }
     }
 
+    fig = MagicMock()
+    mock_create.return_value = fig
+
     stocks = [
         ["2025/01/01", "AAPL(Apple)", "us", 200, "IT"],
-        ["2025/01/01", "7203(トヨタ)", "ja", 3000, "工業"],
         ["2025/02/01", "AAPL(Apple)", "us", 210, "IT"],
+        ["2025/01/01", "7203(トヨタ)", "ja", 3000, "工業"],
         ["2025/02/01", "7203(トヨタ)", "ja", 3050, "工業"],
     ]
 
+    pdf_instance = mock_pdf.return_value.__enter__.return_value
+
     graph.create_graph_on_pdf(stocks)
 
+    # PDFはカテゴリごとに2ファイル
+    assert mock_pdf.call_count == 2
+
+    mock_pdf.assert_has_calls([
+        call("pdf/ja_工業.pdf"),
+        call("pdf/us_IT.pdf")
+    ], any_order=True)
+
+    # 月ごとに4ページ保存
+    assert pdf_instance.savefig.call_count == 4
+
+    # 月ごとにグラフ作成
     assert mock_create.call_count == 4
-
-    actual = {
-        (args.args[1], args.args[2], args.args[3])
-        for args in mock_create.call_args_list
-    }
-
-    expected = {
-        ("ja", "工業", "pdf/ja_工業_202501.pdf"),
-        ("ja", "工業", "pdf/ja_工業_202502.pdf"),
-        ("us", "IT", "pdf/us_IT_202501.pdf"),
-        ("us", "IT", "pdf/us_IT_202502.pdf"),
-    }
-
-    assert actual == expected

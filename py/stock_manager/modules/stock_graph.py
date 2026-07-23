@@ -51,8 +51,7 @@ class StockGraph:
         df: pd.DataFrame,
         country: str,
         category: str,
-        output_file: str
-    ) -> None:
+    ) -> plt.Figure:
         country_df = df[df["国"] == country]
 
         if country_df.empty:
@@ -103,9 +102,14 @@ class StockGraph:
         )
 
         # グラフの装飾
+        month = pivot_df.index[0].strftime("%Y/%m")
+
         sub_ax.set_title(
-            f"{'日本株' if country == 'ja' else '米国株'} - {category}"
+            f"{month} {'日本株' if country == 'ja' else '米国株'} - {category}"
         )
+        #sub_ax.set_title(
+        #    f"{'日本株' if country == 'ja' else '米国株'} - {category}"
+        #)
 
         sub_ax.set_xlabel("日付")
 
@@ -123,9 +127,13 @@ class StockGraph:
         # PDF出力
         self.logger.info("PDF出力")
 
-        with PdfPages(output_file) as pdf:
-            pdf.savefig(fig)
-            plt.close(fig)
+        #with PdfPages(output_file) as pdf:
+        #    pdf.savefig(fig)
+        #    plt.close(fig)
+
+        fig.tight_layout()
+
+        return fig
 
     def create_graph_on_pdf(
         self,
@@ -140,25 +148,34 @@ class StockGraph:
         )
 
         df["日時"] = pd.to_datetime(df["日付"])
-
-        # 年月列を追加
         df["年月"] = df["日時"].dt.strftime("%Y%m")
 
-        # 年月 × 国 × カテゴリごとにPDF作成
-        grouped = df.groupby(["年月", "国", "カテゴリ"])
+        # 国×カテゴリ
+        grouped = df.groupby(["国", "カテゴリ"])
 
-        for (yyyymm, country, category), group_df in grouped:
+        for (country, category), category_df in grouped:
+
             output_file = (
                 f'{self.config["pdf"]["filepath"]}/'
-                f'{country}_{category}_{yyyymm}.pdf'
+                f'{country}_{category}.pdf'
             )
 
-            self._create_graph(
-                group_df,
-                country,
-                category,
-                output_file
-            )
+            self.logger.info(f"PDF出力: {output_file}")
+
+            with PdfPages(output_file) as pdf:
+
+                month_group = category_df.groupby("年月")
+
+                for _, month_df in month_group:
+
+                    fig = self._create_graph(
+                        month_df,
+                        country,
+                        category,
+                    )
+
+                    pdf.savefig(fig)
+                    plt.close(fig)
 
         self.logger.info("グラフ作成終了")
 
