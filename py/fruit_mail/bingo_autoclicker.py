@@ -1,8 +1,9 @@
+import os
 import asyncio
 from playwright.async_api import async_playwright
 
-LOGIN_ID = "5782102"
-PASSWORD = "Mtmtms114514"
+password = os.getenv("PASSWORD", "")
+login_id = os.getenv("LOGIN_ID", "")
 
 
 async def login(page):
@@ -11,8 +12,8 @@ async def login(page):
         return
 
     # ID・パスワード入力
-    await page.fill("#user_identifier", LOGIN_ID)
-    await page.fill("#password", PASSWORD)
+    await page.fill("#user_identifier", login_id)
+    await page.fill("#password", password)
 
     # ログインボタン押下
     await page.locator('button[type="submit"]').click()
