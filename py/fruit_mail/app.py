@@ -1,16 +1,15 @@
-import os
+from playwright.async_api import async_playwright
 
 from config.config import setting
-from playwright.async_api import async_playwright
 from services.bingo_service import BingoService
-from services.scratch_service import ScratchService
+from services.fruitmail_service import FruitmailService
 from services.login_service import LoginService
+from services.scratch_service import ScratchService
 
 
 async def main():
 
     async with async_playwright() as p:
-
         browser = await p.chromium.launch(
             headless=setting.browser.headless
         )
@@ -25,16 +24,15 @@ async def main():
         bingo_service = BingoService(page, setting)
         scratch_service = ScratchService(page)
 
-        await login_service.login(
-            os.getenv("LOGIN_ID"),
-            os.getenv("PASSWORD")
+        fruitmail = FruitmailService(
+            page,
+            login_service,
+            bingo_service,
+            scratch_service,
+            setting,
         )
 
-        await page.goto(setting.site.bingo_url)
-        await bingo_service.play()
-
-        await page.goto(setting.site.scratch_url)
-        await scratch_service.play()
+        await fruitmail.execute()
 
         await browser.close()
 

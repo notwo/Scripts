@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import yaml
+
 from models.setting import BingoSetting, BrowserSetting, Setting, SiteSetting
 
 BASE_DIR = Path(__file__).resolve().parent.parent

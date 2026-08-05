@@ -1,5 +1,6 @@
 from pages.scratch_page import ScratchPage
 
+
 class ScratchService:
 
     def __init__(self, page):
