@@ -1,0 +1,10 @@
+site:
+  login_url: "https://www.fruitmail.net/"
+  bingo_url: "https://www.fruitmail.net/bingo/index.php"
+
+bingo:
+  max_click: 4
+
+browser:
+  headless: false
+  timeout: 30000
