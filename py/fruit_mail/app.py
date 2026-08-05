@@ -3,6 +3,7 @@ import os
 from config.config import setting
 from playwright.async_api import async_playwright
 from services.bingo_service import BingoService
+from services.scratch_service import ScratchService
 from services.login_service import LoginService
 
 
@@ -22,6 +23,7 @@ async def main():
 
         login_service = LoginService(page)
         bingo_service = BingoService(page, setting)
+        scratch_service = ScratchService(page)
 
         await login_service.login(
             os.getenv("LOGIN_ID"),
@@ -29,8 +31,10 @@ async def main():
         )
 
         await page.goto(setting.site.bingo_url)
-
         await bingo_service.play()
+
+        await page.goto(setting.site.scratch_url)
+        await scratch_service.play()
 
         await browser.close()
 

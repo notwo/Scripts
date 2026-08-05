@@ -5,6 +5,7 @@ from dataclasses import dataclass
 class SiteSetting:
     login_url: str
     bingo_url: str
+    scratch_url: str
 
 
 @dataclass(frozen=True)

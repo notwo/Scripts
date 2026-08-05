@@ -10,7 +10,6 @@ class LoginService:
         self.login_page = LoginPage(page)
 
     async def login(self, login_id, password):
-
         if not await self.login_page.is_login_page():
             print("既にログイン済み")
             return
