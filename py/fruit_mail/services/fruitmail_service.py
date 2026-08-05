@@ -18,6 +18,11 @@ class FruitmailService:
         self.scratch_service = scratch_service
 
     async def execute(self):
+        login_id = os.getenv("LOGIN_ID")
+        password = os.getenv("PASSWORD")
+        if not login_id or not password:
+            self.logger.warning("login_id,passwordを設定してください")
+            return
 
         await self.login_service.login(
             os.getenv("LOGIN_ID"),

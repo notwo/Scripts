@@ -1,14 +1,22 @@
-class BingoService:
+from pages.bingo_page import BingoPage
+from services.base_game_service import BaseGameService
+
+
+class BingoService(BaseGameService):
 
     def __init__(self, page, setting):
-        self.page = page
-        self.setting = setting
+        super().__init__(page, setting)
+        self.bingo_page = BingoPage(page)
+
+    @property
+    def url(self) -> str:
+        return self.setting.site.bingo_url
 
     async def play(self):
 
         await self.click_start()
 
-        count = await self.page.locator("input.before_select").count()
+        count = await self.bingo_page.before_select_count()
 
         click_count = min(
             self.setting.bingo.max_click,
@@ -17,10 +25,14 @@ class BingoService:
 
         for _ in range(click_count):
 
-            await self.page.locator("input.before_select").first.click()
+            await self.bingo_page.click_first_before_select()
 
             await self.page.wait_for_function(
-                "count => document.querySelectorAll('input.before_select').length < count",
+                """
+                count => document.querySelectorAll(
+                    'input.before_select'
+                ).length < count
+                """,
                 arg=count,
             )
 
@@ -28,7 +40,5 @@ class BingoService:
 
     async def click_start(self):
 
-        start = self.page.locator("#bingo_start")
-
-        if await start.is_visible():
-            await start.click()
+        if await self.bingo_page.has_start_button():
+            await self.bingo_page.click_start()

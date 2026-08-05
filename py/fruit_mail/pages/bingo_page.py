@@ -3,10 +3,11 @@ class BingoPage:
     def __init__(self, page):
         self.page = page
 
+    async def has_start_button(self):
+        return await self.page.locator("#bingo_start").is_visible()
+
     async def click_start(self):
-        start = self.page.locator("#bingo_start")
-        if await start.is_visible():
-            await start.click()
+        await self.page.locator("#bingo_start").click()
 
     async def before_select_count(self):
         return await self.page.locator("input.before_select").count()

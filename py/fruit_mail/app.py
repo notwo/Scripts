@@ -8,7 +8,6 @@ from services.scratch_service import ScratchService
 
 
 async def main():
-
     async with async_playwright() as p:
         browser = await p.chromium.launch(
             headless=setting.browser.headless
