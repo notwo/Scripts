@@ -4,6 +4,7 @@ from config.config import setting
 from services.bingo_service import BingoService
 from services.fruitmail_service import FruitmailService
 from services.login_service import LoginService
+from services.prize_everyday_service import PrizeEverydayService
 from services.prize_present_slot_service import PrizePresentSlotService
 from services.scratch_service import ScratchService
 
@@ -20,11 +21,11 @@ async def main():
 
         login_service = LoginService(page, setting)
 
-        game_services = [
-#            BingoService(page, setting),
-#            ScratchService(page, setting),
-            PrizePresentSlotService(page, setting),
-        ]
+        game_services = []
+        game_services.append(BingoService(page, setting))
+        game_services.append(ScratchService(page, setting))
+        game_services.append(PrizeEverydayService(page, setting))
+        game_services.append(PrizePresentSlotService(page, setting))
 
         fruitmail = FruitmailService(
             login_service=login_service,

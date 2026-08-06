@@ -3,6 +3,7 @@ site:
   bingo_url: https://www.fruitmail.net/bingo/index.php
   scratch_url: https://www.fruitmail.net/scratch/
   prize_present_slot_url: https://slot.fruitmail.net/present_slot/
+  prize_everyday_url: https://www.fruitmail.net/prize/everyday/
 
 browser:
   headless: false
