@@ -5,11 +5,9 @@ class FruitmailService:
 
     def __init__(
         self,
-        page,
         login_service,
         game_services,
     ):
-        self.page = page
         self.login_service = login_service
         self.game_services = game_services
 

@@ -6,6 +6,7 @@ class SiteSetting:
     login_url: str
     bingo_url: str
     scratch_url: str
+    prize_present_slot_url: str
 
 
 @dataclass(frozen=True)
