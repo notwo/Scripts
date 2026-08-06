@@ -19,15 +19,12 @@ class FruitmailService:
 
     async def execute(self):
         login_id = os.getenv("LOGIN_ID")
-        password = os.getenv("PASSWORD")
+        password = os.getenv("FR_PASSWORD")
         if not login_id or not password:
-            self.logger.warning("login_id,passwordを設定してください")
+            print("login_id,passwordを設定してください")
             return
 
-        await self.login_service.login(
-            os.getenv("LOGIN_ID"),
-            os.getenv("PASSWORD")
-        )
+        await self.login_service.login(login_id, password)
 
         await self.page.goto(self.setting.site.bingo_url)
         await self.bingo_service.play()

@@ -7,9 +7,12 @@ class ScratchService:
         self.page = page
         self.scratch_page = ScratchPage(page)
 
+    @property
+    def url(self):
+        return self.setting.site.scratch_url
+
     async def play(self):
         await self.click_links()
-
         await self.click_images()
 
     async def click_links(self):
