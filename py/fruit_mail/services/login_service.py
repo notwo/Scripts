@@ -5,11 +5,14 @@ from pages.login_page import LoginPage
 
 class LoginService:
 
-    def __init__(self, page):
+    def __init__(self, page, setting):
         self.page = page
         self.login_page = LoginPage(page)
+        self.setting = setting
 
     async def login(self, login_id, password):
+        await self.page.goto(self.setting.site.login_url)
+
         if not await self.login_page.is_login_page():
             print("既にログイン済み")
             return

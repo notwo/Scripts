@@ -1,5 +1,5 @@
 site:
-  login_url: https://www.fruitmail.net/
+  login_url: https://www.fruitmail.net/login?go_html=https://www.fruitmail.net/game/
   bingo_url: https://www.fruitmail.net/bingo/index.php
   scratch_url: https://www.fruitmail.net/scratch/
 

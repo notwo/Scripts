@@ -17,18 +17,17 @@ async def main():
 
         page.set_default_timeout(setting.browser.timeout)
 
-        await page.goto(setting.site.bingo_url)
+        login_service = LoginService(page, setting)
 
-        login_service = LoginService(page)
-        bingo_service = BingoService(page, setting)
-        scratch_service = ScratchService(page)
+        game_services = [
+            BingoService(page, setting),
+            ScratchService(page, setting),
+        ]
 
         fruitmail = FruitmailService(
-            page,
-            login_service,
-            bingo_service,
-            scratch_service,
-            setting,
+            page=page,
+            login_service=login_service,
+            game_services=game_services
         )
 
         await fruitmail.execute()

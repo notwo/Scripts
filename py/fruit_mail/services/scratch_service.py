@@ -1,9 +1,11 @@
 from pages.scratch_page import ScratchPage
+from services.base_game_service import BaseGameService
 
 
-class ScratchService:
+class ScratchService(BaseGameService):
 
-    def __init__(self, page):
+    def __init__(self, page, setting):
+        super().__init__(page, setting)
         self.page = page
         self.scratch_page = ScratchPage(page)
 
@@ -19,7 +21,6 @@ class ScratchService:
       count = await self.scratch_page.scratch_link_count()
 
       for i in range(count):
-
           link = self.scratch_page.scratch_link(i)
 
           if not await link.is_visible():
@@ -32,7 +33,6 @@ class ScratchService:
           await self.page.wait_for_timeout(500)
 
           if len(self.page.context.pages) > before:
-
               new_page = self.page.context.pages[-1]
 
               try:
@@ -41,7 +41,6 @@ class ScratchService:
                   await new_page.close()
 
           else:
-
               try:
                   await self.page.wait_for_load_state("domcontentloaded", timeout=5000)
               except:
@@ -58,7 +57,6 @@ class ScratchService:
       count = await self.scratch_page.scratch_image_count()
 
       for i in range(count):
-
           image = self.scratch_page.scratch_image(i)
 
           if await image.is_visible():

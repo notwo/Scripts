@@ -7,15 +7,11 @@ class FruitmailService:
         self,
         page,
         login_service,
-        bingo_service,
-        scratch_service,
-        setting,
+        game_services,
     ):
         self.page = page
-        self.setting = setting
         self.login_service = login_service
-        self.bingo_service = bingo_service
-        self.scratch_service = scratch_service
+        self.game_services = game_services
 
     async def execute(self):
         login_id = os.getenv("LOGIN_ID")
@@ -26,8 +22,5 @@ class FruitmailService:
 
         await self.login_service.login(login_id, password)
 
-        await self.page.goto(self.setting.site.bingo_url)
-        await self.bingo_service.play()
-
-        await self.page.goto(self.setting.site.scratch_url)
-        await self.scratch_service.play()
+        for game in self.game_services:
+            await game.execute()
