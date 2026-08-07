@@ -27,11 +27,8 @@ class PrizePresentSlotService(BaseGameService):
                 if await self.slot_page.close_ad():
                     await asyncio.sleep(1)
                     continue
-                else:
-                    print('だめだったでち')
 
                 button = await self.slot_page.visible_button()
-                print('ittinpo')
 
                 if button:
                     selector, name = button

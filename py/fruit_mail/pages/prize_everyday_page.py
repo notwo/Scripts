@@ -22,7 +22,6 @@ class PrizeEverydayPage:
         )
 
     async def select_apply_number(self, value: str):
-
         await self.page.locator(
             'select[name="selected_apply_number"]'
         ).select_option(value=value)

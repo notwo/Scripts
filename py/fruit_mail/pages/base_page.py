@@ -10,15 +10,12 @@ class BasePage:
         self.page = page
 
     async def close_ad(self) -> bool:
-
         for selector in self.AD_CLOSE_SELECTORS:
-
             locator = self.page.locator(selector)
 
             count = await locator.count()
 
             for i in range(count):
-
                 target = locator.nth(i)
 
                 try:

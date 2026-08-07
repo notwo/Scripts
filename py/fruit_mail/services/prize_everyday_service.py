@@ -13,7 +13,6 @@ class PrizeEverydayService(BaseGameService):
         return self.setting.site.prize_everyday_url
 
     async def play(self):
-
         options = await self.prize_page.get_apply_numbers()
 
         numeric_options = [
