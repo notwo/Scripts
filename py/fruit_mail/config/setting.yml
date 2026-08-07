@@ -3,12 +3,15 @@ site:
   bingo_url: https://www.fruitmail.net/bingo/index.php
   scratch_url: https://www.fruitmail.net/scratch/
   prize_everyday_url: https://www.fruitmail.net/prize/everyday/
+  prize_point_url: https://www.fruitmail.net/prize/point/
+  daily_ad_click_url: https://www.fruitmail.net/clickpoint/daily
+  rank_gacha_url: https://www.fruitmail.net/rankgacha
   prize_present_slot_url: https://slot.fruitmail.net/present_slot/
   prize_roulette_url: https://www.fruitmail.net/prize/roulette/
 
 browser:
   headless: false
-  timeout: 30000
+  timeout: 10000
 
 bingo:
   max_click: 4
@@ -16,6 +19,11 @@ bingo:
 game:
   bingo: True
   scratch: True
-  prize_everyday: True
   prize_present_slot: True
   prize_roulette: True
+
+routine:
+  prize_everyday: True
+  prize_point: True
+  daily_ad_click: True
+  rank_gacha: True

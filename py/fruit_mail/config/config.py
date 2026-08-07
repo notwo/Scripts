@@ -2,7 +2,7 @@ from pathlib import Path
 
 import yaml
 
-from models.setting import BingoSetting, BrowserSetting, Setting, SiteSetting, GameSetting
+from models.setting import BingoSetting, BrowserSetting, Setting, SiteSetting, GameSetting, OtherRoutineSetting
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -17,6 +17,7 @@ def load_setting() -> Setting:
         browser=BrowserSetting(**yml["browser"]),
         bingo=BingoSetting(**yml["bingo"]),
         game=GameSetting(**yml["game"]),
+        routine=OtherRoutineSetting(**yml["routine"]),
     )
 
 
