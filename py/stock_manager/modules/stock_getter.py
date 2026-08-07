@@ -124,6 +124,8 @@ class StockGetter:
             .inner_text()
         )
         price_text = price_text.replace(",", "")
+        if price_text == '---':
+            return company_name, 0
 
         price = (
             float(price_text)
@@ -167,6 +169,8 @@ class StockGetter:
                                     code
                                 )
                             )
+                            if price == 0:
+                                continue
 
                         case _:
                             self.logger.warning(
