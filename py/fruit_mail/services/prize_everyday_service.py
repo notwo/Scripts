@@ -41,6 +41,8 @@ class PrizeEverydayService(BaseGameService):
 
         await self.prize_page.click_confirm_button()
 
+        await self.prize_page.click_confirm_button()
+
         await self.prize_page.click_final_apply_button()
 
         print("応募完了")

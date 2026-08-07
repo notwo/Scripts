@@ -17,7 +17,6 @@ class BaseGameService(ABC):
         """共通処理"""
 
         await self.page.goto(self.url, wait_until="domcontentloaded",)
-        #await self.page.wait_for_load_state("domcontentloaded")
 
         # 広告が表示されていたら閉じる
         await self._close_interstitial_ad()

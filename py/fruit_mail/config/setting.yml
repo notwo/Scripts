@@ -2,8 +2,9 @@ site:
   login_url: https://www.fruitmail.net/login?go_html=https://www.fruitmail.net/game/
   bingo_url: https://www.fruitmail.net/bingo/index.php
   scratch_url: https://www.fruitmail.net/scratch/
-  prize_present_slot_url: https://slot.fruitmail.net/present_slot/
   prize_everyday_url: https://www.fruitmail.net/prize/everyday/
+  prize_present_slot_url: https://slot.fruitmail.net/present_slot/
+  prize_roulette_url: https://www.fruitmail.net/prize/roulette/
 
 browser:
   headless: false
@@ -11,3 +12,10 @@ browser:
 
 bingo:
   max_click: 4
+
+game:
+  bingo: True
+  scratch: True
+  prize_everyday: True
+  prize_present_slot: True
+  prize_roulette: True

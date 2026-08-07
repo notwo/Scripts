@@ -8,6 +8,7 @@ class PrizePresentSlotService(BaseGameService):
 
     def __init__(self, page, setting):
         super().__init__(page, setting)
+        self.page = page
         self.slot_page = PrizePresentSlotPage(page)
 
     @property
@@ -15,6 +16,8 @@ class PrizePresentSlotService(BaseGameService):
         return self.setting.site.prize_present_slot_url
 
     async def play(self):
+        await self.page.reload(wait_until="domcontentloaded")
+
         while True:
             try:
                 if await self.slot_page.is_finished():

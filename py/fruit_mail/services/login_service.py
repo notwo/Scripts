@@ -27,6 +27,4 @@ class LoginService:
 
         await self.page.wait_for_load_state("domcontentloaded")
 
-        await self.page.reload()
-
-        await self.page.wait_for_load_state("domcontentloaded")
+        await self.page.reload(wait_until="domcontentloaded")
