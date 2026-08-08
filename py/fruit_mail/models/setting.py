@@ -6,6 +6,7 @@ class SiteSetting:
     login_url: str
     bingo_url: str
     scratch_url: str
+    chirashi_url: str
     prize_everyday_url: str
     prize_point_url: str
     daily_ad_click_url: str
@@ -35,6 +36,7 @@ class GameSetting:
 
 @dataclass(frozen=True)
 class OtherRoutineSetting:
+    chirashi: bool
     prize_everyday: bool
     prize_point: bool
     daily_ad_click: bool
