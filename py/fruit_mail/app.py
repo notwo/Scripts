@@ -4,6 +4,7 @@ from config.config import setting
 from services.bingo_service import BingoService
 from services.fruitmail_service import FruitmailService
 from services.login_service import LoginService
+from services.chirashi_service import ChirashiService
 from services.prize_everyday_service import PrizeEverydayService
 from services.prize_point_service import PrizePointService
 from services.daily_ad_click_service import DailyAdClickService
@@ -30,6 +31,8 @@ async def main():
             game_services.append(BingoService(page, setting))
         if setting.game.scratch:
             game_services.append(ScratchService(page, setting))
+        if setting.routine.chirashi:
+            game_services.append(ChirashiService(page, setting))
         if setting.routine.prize_everyday:
             game_services.append(PrizeEverydayService(page, setting))
         if setting.routine.prize_point:
