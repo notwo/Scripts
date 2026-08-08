@@ -1,19 +1,19 @@
-from pages.prize_everyday_page import PrizeEverydayPage
+from pages.prize_gorgeous_page import PrizeGorgeousPage
 from services.base_game_service import BaseGameService
 
 
-class PrizeEverydayService(BaseGameService):
+class PrizeGorgeousService(BaseGameService):
 
     def __init__(self, page, setting):
         super().__init__(page, setting)
-        self.prize_page = PrizeEverydayPage(page)
+        self.prize_page = PrizeGorgeousPage(page)
 
     @property
     def url(self) -> str:
-        return self.setting.site.prize_everyday_url
+        return self.setting.site.prize_gorgeous_url
 
     async def play(self):
-        print("======== 毎日懸賞開始 ========")
+        print("======== 豪華懸賞開始 ========")
 
         options = await self.prize_page.get_apply_numbers()
 
@@ -46,5 +46,4 @@ class PrizeEverydayService(BaseGameService):
 
         await self.prize_page.click_final_apply_button()
 
-        print("======== 応募完了 ========")
-
+        print("======== 豪華懸賞終了 ========")

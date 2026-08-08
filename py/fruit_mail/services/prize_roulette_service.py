@@ -16,7 +16,8 @@ class PrizeRouletteService(BaseGameService):
         return self.setting.site.prize_roulette_url
 
     async def play(self):
-        # スタート
+        print("======== プレゼントルーレット開始 ========")
+
         await self.page.locator('button[type="submit"]').click()
 
         while True:
@@ -26,11 +27,6 @@ class PrizeRouletteService(BaseGameService):
                 #
                 if await self.roulette_page.is_finished():
                     print("プレゼントルーレット終了")
-                    print("応募しよう")
-                    self.roulette_page.click_apply_button()
-                    self.roulette_page.click_confirm_button()
-                    self.roulette_page.click_confirm_button()
-                    self.roulette_page.click_final_apply_button()
                     break
 
                 #
@@ -57,3 +53,10 @@ class PrizeRouletteService(BaseGameService):
                 print(f"PrizeRouletteService Error: {e}")
 
             await asyncio.sleep(5)
+
+        self.roulette_page.click_apply_button()
+        self.roulette_page.click_confirm_button()
+        self.roulette_page.click_confirm_button()
+        self.roulette_page.click_final_apply_button()
+
+        print("======== プレゼントルーレット終了 ========")

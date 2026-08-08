@@ -6,7 +6,12 @@ class SiteSetting:
     login_url: str
     bingo_url: str
     scratch_url: str
+    chirashi_url: str
     prize_everyday_url: str
+    prize_point_url: str
+    prize_gorgeous_url: str
+    daily_ad_click_url: str
+    rank_gacha_url: str
     prize_present_slot_url: str
     prize_roulette_url: str
 
@@ -26,9 +31,18 @@ class BingoSetting:
 class GameSetting:
     bingo: bool
     scratch: bool
-    prize_everyday: bool
+    chirashi: bool
+    rank_gacha: bool
     prize_present_slot: bool
     prize_roulette: bool
+
+
+@dataclass(frozen=True)
+class OtherRoutineSetting:
+    prize_everyday: bool
+    prize_point: bool
+    prize_gorgeous: bool
+    daily_ad_click: bool
 
 
 @dataclass(frozen=True)
@@ -37,3 +51,4 @@ class Setting:
     browser: BrowserSetting
     bingo: BingoSetting
     game: GameSetting
+    routine: OtherRoutineSetting
