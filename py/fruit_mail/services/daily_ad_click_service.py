@@ -13,6 +13,8 @@ class DailyAdClickService(BaseGameService):
         return self.setting.site.daily_ad_click_url
 
     async def play(self):
+        print("======== 毎日ポイント開始 ========")
+
         count = await self.ad_page.link_count()
 
         for i in range(count):
@@ -48,4 +50,5 @@ class DailyAdClickService(BaseGameService):
                 except:
                     pass
 
-        print("クリック完了")
+        print("======== 毎日ポイント終了 ========")
+

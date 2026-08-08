@@ -13,6 +13,8 @@ class BingoService(BaseGameService):
         return self.setting.site.bingo_url
 
     async def play(self):
+        print("======== ビンゴ開始 ========")
+
         await self.click_start()
 
         count = await self.bingo_page.before_select_count()
@@ -35,6 +37,8 @@ class BingoService(BaseGameService):
             )
 
             count -= 1
+
+        print("======== ビンゴ終了 ========")
 
     async def click_start(self):
         if await self.bingo_page.has_start_button():

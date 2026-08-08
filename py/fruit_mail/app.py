@@ -7,11 +7,46 @@ from services.login_service import LoginService
 from services.chirashi_service import ChirashiService
 from services.prize_everyday_service import PrizeEverydayService
 from services.prize_point_service import PrizePointService
+from services.prize_gorgeous_service import PrizeGorgeousService
 from services.daily_ad_click_service import DailyAdClickService
 from services.rank_gacha_service import RankGachaService
 from services.prize_present_slot_service import PrizePresentSlotService
 from services.scratch_service import ScratchService
 from services.prize_roulette_service import PrizeRouletteService
+
+
+def game_services(page):
+    services = []
+
+    if setting.game.bingo:
+        services.append(BingoService(page, setting))
+    if setting.game.scratch:
+        services.append(ScratchService(page, setting))
+    if setting.game.chirashi:
+        services.append(ChirashiService(page, setting))
+    if setting.game.rank_gacha:
+        services.append(RankGachaService(page, setting))
+    if setting.game.prize_present_slot:
+        services.append(PrizePresentSlotService(page, setting))
+    if setting.game.prize_roulette:
+        services.append(PrizeRouletteService(page, setting))
+
+    return services
+
+
+def routine_services(page):
+    services = []
+
+    if setting.routine.prize_everyday:
+        services.append(PrizeEverydayService(page, setting))
+    if setting.routine.prize_point:
+        services.append(PrizePointService(page, setting))
+    if setting.routine.prize_gorgeous:
+        services.append(PrizeGorgeousService(page, setting))
+    if setting.routine.daily_ad_click:
+        services.append(DailyAdClickService(page, setting))
+
+    return services
 
 
 async def main():
@@ -26,29 +61,10 @@ async def main():
 
         login_service = LoginService(page, setting)
 
-        game_services = []
-        if setting.game.bingo:
-            game_services.append(BingoService(page, setting))
-        if setting.game.scratch:
-            game_services.append(ScratchService(page, setting))
-        if setting.routine.chirashi:
-            game_services.append(ChirashiService(page, setting))
-        if setting.routine.prize_everyday:
-            game_services.append(PrizeEverydayService(page, setting))
-        if setting.routine.prize_point:
-            game_services.append(PrizePointService(page, setting))
-        if setting.routine.daily_ad_click:
-            game_services.append(DailyAdClickService(page, setting))
-        if setting.routine.rank_gacha:
-            game_services.append(RankGachaService(page, setting))
-        if setting.game.prize_present_slot:
-            game_services.append(PrizePresentSlotService(page, setting))
-        if setting.game.prize_roulette:
-            game_services.append(PrizeRouletteService(page, setting))
-
         fruitmail = FruitmailService(
             login_service=login_service,
-            game_services=game_services
+            game_services=game_services(page),
+            routine_services=routine_services(page)
         )
 
         await fruitmail.execute()

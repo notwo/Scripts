@@ -9,6 +9,7 @@ class SiteSetting:
     chirashi_url: str
     prize_everyday_url: str
     prize_point_url: str
+    prize_gorgeous_url: str
     daily_ad_click_url: str
     rank_gacha_url: str
     prize_present_slot_url: str
@@ -30,17 +31,18 @@ class BingoSetting:
 class GameSetting:
     bingo: bool
     scratch: bool
+    chirashi: bool
+    rank_gacha: bool
     prize_present_slot: bool
     prize_roulette: bool
 
 
 @dataclass(frozen=True)
 class OtherRoutineSetting:
-    chirashi: bool
     prize_everyday: bool
     prize_point: bool
+    prize_gorgeous: bool
     daily_ad_click: bool
-    rank_gacha: bool
 
 
 @dataclass(frozen=True)

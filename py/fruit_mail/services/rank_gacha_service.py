@@ -13,6 +13,8 @@ class RankGachaService(BaseGameService):
         return self.setting.site.rank_gacha_url
 
     async def play(self):
+        print("======== ガチャ開始 ========")
+
         while True:
             try:
                 if await self.gacha_page.is_finished():
@@ -29,4 +31,4 @@ class RankGachaService(BaseGameService):
             except Exception as e:
                 print(f"エラー: {e}")
 
-        print("本日分のガチャ終了")
+        print("======== ガチャ終了 ========")

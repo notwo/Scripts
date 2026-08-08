@@ -3,10 +3,11 @@ site:
   bingo_url: https://www.fruitmail.net/bingo/index.php
   scratch_url: https://www.fruitmail.net/scratch/
   chirashi_url: https://www.fruitmail.net/chirashi/
+  rank_gacha_url: https://www.fruitmail.net/rankgacha
   prize_everyday_url: https://www.fruitmail.net/prize/everyday/
   prize_point_url: https://www.fruitmail.net/prize/point/
+  prize_gorgeous_url: https://www.fruitmail.net/prize/gorgeous/
   daily_ad_click_url: https://www.fruitmail.net/clickpoint/daily
-  rank_gacha_url: https://www.fruitmail.net/rankgacha
   prize_present_slot_url: https://slot.fruitmail.net/present_slot/
   prize_roulette_url: https://www.fruitmail.net/prize/roulette/
 
@@ -18,14 +19,15 @@ bingo:
   max_click: 4
 
 game:
-  bingo: False
-  scratch: False
-  prize_present_slot: False
-  prize_roulette: False
+  bingo: True
+  scratch: True
+  chirashi: True
+  rank_gacha: True
+  prize_present_slot: True
+  prize_roulette: True
 
 routine:
-  chirashi: True
-  prize_everyday: False
-  prize_point: False
-  daily_ad_click: False
-  rank_gacha: False
+  prize_everyday: True
+  prize_point: True
+  prize_gorgeous: True
+  daily_ad_click: True

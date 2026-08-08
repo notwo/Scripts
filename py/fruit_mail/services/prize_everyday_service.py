@@ -13,6 +13,8 @@ class PrizeEverydayService(BaseGameService):
         return self.setting.site.prize_everyday_url
 
     async def play(self):
+        print("======== 毎日懸賞開始 ========")
+
         options = await self.prize_page.get_apply_numbers()
 
         numeric_options = [
@@ -44,4 +46,5 @@ class PrizeEverydayService(BaseGameService):
 
         await self.prize_page.click_final_apply_button()
 
-        print("応募完了")
+        print("======== 応募完了 ========")
+

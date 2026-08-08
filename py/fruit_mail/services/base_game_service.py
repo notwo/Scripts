@@ -11,7 +11,7 @@ class BaseGameService(ABC):
     @property
     @abstractmethod
     def url(self) -> str:
-        """ゲームのURL"""
+        """URL"""
 
     async def execute(self):
         """共通処理"""
@@ -33,4 +33,4 @@ class BaseGameService(ABC):
 
     @abstractmethod
     async def play(self):
-        """各ゲーム固有の処理"""
+        """固有の処理"""

@@ -16,13 +16,15 @@ class PrizePresentSlotService(BaseGameService):
         return self.setting.site.prize_present_slot_url
 
     async def play(self):
+        print("======== プレゼントスロット開始 ========")
+
         await self.page.reload(wait_until="domcontentloaded")
 
         while True:
             try:
                 if await self.slot_page.is_finished():
                     print("プレゼントトップへボタンを検出")
-                    return
+                    break
 
                 if await self.slot_page.close_ad():
                     await asyncio.sleep(1)
@@ -41,3 +43,5 @@ class PrizePresentSlotService(BaseGameService):
                 print(f"エラー: {e}")
 
             await asyncio.sleep(5)
+
+        print("======== プレゼントスロット開始 ========")

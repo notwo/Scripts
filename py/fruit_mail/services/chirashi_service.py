@@ -13,8 +13,10 @@ class ChirashiService(BaseGameService):
         return self.setting.site.chirashi_url
 
     async def play(self):
+        print("======== チラシクリック開始 ========")
+
         await self.chirashi_page.search_by_zipcode()
 
         await self.chirashi_page.click_button()
 
-        print("チラシクリック終了")
+        print("======== チラシクリック終了 ========")

@@ -18,6 +18,8 @@ class ScratchService(BaseGameService):
         await self.click_images()
 
     async def click_links(self):
+      print("======== スクラッチ開始 ========")
+
       count = await self.scratch_page.scratch_link_count()
 
       for i in range(count):
@@ -52,6 +54,8 @@ class ScratchService(BaseGameService):
                   await self.page.wait_for_load_state("domcontentloaded", timeout=5000)
               except:
                   pass
+
+      print("======== スクラッチ終了 ========")
 
     async def click_images(self):
       count = await self.scratch_page.scratch_image_count()
