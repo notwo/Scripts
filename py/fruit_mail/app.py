@@ -59,17 +59,15 @@ async def main():
 
         page.set_default_timeout(setting.browser.timeout)
 
-        login_service = LoginService(page, setting)
-
         fruitmail = FruitmailService(
-            login_service=login_service,
+            login_service=LoginService(page, setting),
             game_services=game_services(page),
             routine_services=routine_services(page)
         )
-
         await fruitmail.execute()
 
         await browser.close()
+
 
 if __name__ == "__main__":
     import asyncio

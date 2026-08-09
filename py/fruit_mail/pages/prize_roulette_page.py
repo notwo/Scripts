@@ -12,6 +12,12 @@ class PrizeRoulettePage(BasePage):
     def __init__(self, page):
         super().__init__(page)
 
+    async def is_applied(self) -> bool:
+        return await self.page.get_by_role(
+            "button",
+            name="応募済み"
+        ).is_visible()
+
     async def is_finished(self) -> bool:
         """
         ルーレット終了画面か判定

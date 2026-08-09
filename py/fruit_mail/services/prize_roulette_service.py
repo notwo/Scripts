@@ -18,6 +18,10 @@ class PrizeRouletteService(BaseGameService):
     async def play(self):
         print("======== プレゼントルーレット開始 ========")
 
+        if await self.roulette_page.is_applied():
+            print("======== プレゼントルーレット終了 ========")
+            return
+
         await self.page.locator('button[type="submit"]').click()
 
         while True:
@@ -26,14 +30,13 @@ class PrizeRouletteService(BaseGameService):
                 # 終了判定
                 #
                 if await self.roulette_page.is_finished():
-                    print("プレゼントルーレット終了")
+                    print("======== プレゼントルーレット終了 ========")
                     break
 
                 #
                 # 広告を閉じる
                 #
                 if await self.roulette_page.close_ad():
-                    print("広告を閉じました")
                     await asyncio.sleep(1)
                     continue
 

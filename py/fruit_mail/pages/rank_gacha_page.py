@@ -10,16 +10,32 @@ class RankGachaPage:
         )
         return await text.is_visible()
 
+    async def close_ad(self):
+        text = self.page.locator("div.continue-prompt-text")
+        if await text.is_visible():
+            text.click()
+
+    async def ok_button(self):
+        """
+        動画の読み込みに失敗しました
+        """
+        button = self.page.get_by_role(
+            "button",
+            name="OK"
+        )
+        if await button.is_visible():
+          await button.click()
+
     async def back_to_gacha(self):
         """
         プレイ画面へ戻る
         """
-        button = self.page.get_by_role(
-            "button",
+        link = self.page.get_by_role(
+            "link",
             name="プレイ画面へ戻る"
         )
-        if await button.is_visible():
-          await button.click()
+        if await link.is_visible():
+          await link.click()
 
     async def click_button(self):
         """

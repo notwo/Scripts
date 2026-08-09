@@ -15,13 +15,17 @@ class RankGachaService(BaseGameService):
     async def play(self):
         print("======== ガチャ開始 ========")
 
-        while True:
+        while True: 
             try:
                 if await self.gacha_page.is_finished():
                     print("「ガチャの結果はこちら」を検出")
                     break
-                #if await self.gacha_page.close_ad():
-                #    continue
+                if await self.gacha_page.close_ad():
+                    continue
+
+                # 動画の読み込みに失敗しました
+                await self.gacha_page.ok_button()
+
                 # プレイ画面へ戻る
                 await self.gacha_page.back_to_gacha()
 

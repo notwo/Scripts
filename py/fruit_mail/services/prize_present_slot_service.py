@@ -23,7 +23,7 @@ class PrizePresentSlotService(BaseGameService):
         while True:
             try:
                 if await self.slot_page.is_finished():
-                    print("プレゼントトップへボタンを検出")
+                    print("======== プレゼントトップへボタンを検出 ========")
                     break
 
                 if await self.slot_page.close_ad():
@@ -44,4 +44,4 @@ class PrizePresentSlotService(BaseGameService):
 
             await asyncio.sleep(5)
 
-        print("======== プレゼントスロット開始 ========")
+        print("======== プレゼントスロット終了 ========")

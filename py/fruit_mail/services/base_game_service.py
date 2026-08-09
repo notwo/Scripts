@@ -27,7 +27,6 @@ class BaseGameService(ABC):
         close_ad = self.page.locator("#btn-close-ad-interstitial")
 
         if await close_ad.is_visible():
-            print("広告を閉じます")
             await close_ad.click()
             await asyncio.sleep(1)
 
