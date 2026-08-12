@@ -24,6 +24,13 @@ class PrizePresentSlotService(BaseGameService):
             try:
                 if await self.slot_page.is_finished():
                     print("======== プレゼントトップへボタンを検出 ========")
+                    countdown = self.page.locator("span.countdown")
+
+                    h = await countdown.locator("#h").inner_text()
+                    m = await countdown.locator("#m").inner_text()
+                    s = await countdown.locator("#s").inner_text()
+
+                    print(f"次回開始まで残り {h}:{m}:{s}")
                     break
 
                 if await self.slot_page.close_ad():

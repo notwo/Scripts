@@ -17,3 +17,4 @@
 /py/*/*.txt
 /py/*/*.ttf
 /py/*/*.otf
+/py/*/*.sqlite3

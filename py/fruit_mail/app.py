@@ -13,6 +13,7 @@ from services.rank_gacha_service import RankGachaService
 from services.prize_present_slot_service import PrizePresentSlotService
 from services.scratch_service import ScratchService
 from services.prize_roulette_service import PrizeRouletteService
+from services.game_top_service import GameTopService
 
 
 def game_services(page):
@@ -30,6 +31,8 @@ def game_services(page):
         services.append(PrizePresentSlotService(page, setting))
     if setting.game.prize_roulette:
         services.append(PrizeRouletteService(page, setting))
+    if setting.game.top:
+        services.append(GameTopService(page, setting))
 
     return services
 

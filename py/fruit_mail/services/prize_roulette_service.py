@@ -57,9 +57,10 @@ class PrizeRouletteService(BaseGameService):
 
             await asyncio.sleep(5)
 
-        self.roulette_page.click_apply_button()
-        self.roulette_page.click_confirm_button()
-        self.roulette_page.click_confirm_button()
-        self.roulette_page.click_final_apply_button()
+        await self.roulette_page.click_apply_button()
+        await self.roulette_page.click_confirm_button()
+        await self.roulette_page.click_confirm_button()
+        await self.roulette_page.click_apply_button()
+        await self.roulette_page.click_final_apply_button()
 
         print("======== プレゼントルーレット終了 ========")

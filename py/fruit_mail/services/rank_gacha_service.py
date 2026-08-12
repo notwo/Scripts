@@ -20,8 +20,7 @@ class RankGachaService(BaseGameService):
                 if await self.gacha_page.is_finished():
                     print("「ガチャの結果はこちら」を検出")
                     break
-                if await self.gacha_page.close_ad():
-                    continue
+                await self.gacha_page.close_ad()
 
                 # 動画の読み込みに失敗しました
                 await self.gacha_page.ok_button()
