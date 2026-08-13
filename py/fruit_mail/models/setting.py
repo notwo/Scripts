@@ -4,14 +4,16 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class SiteSetting:
     login_url: str
+    game_top_url: str
+    campus_url: str
     bingo_url: str
     scratch_url: str
+    rank_gacha_url: str
     chirashi_url: str
     prize_everyday_url: str
     prize_point_url: str
     prize_gorgeous_url: str
     daily_ad_click_url: str
-    rank_gacha_url: str
     prize_present_slot_url: str
     prize_roulette_url: str
 
@@ -29,10 +31,11 @@ class BingoSetting:
 
 @dataclass(frozen=True)
 class GameSetting:
+    top: bool
     bingo: bool
     scratch: bool
-    chirashi: bool
     rank_gacha: bool
+    chirashi: bool
     prize_present_slot: bool
     prize_roulette: bool
 
@@ -46,9 +49,16 @@ class OtherRoutineSetting:
 
 
 @dataclass(frozen=True)
+class CampusSetting:
+    sanji: dict
+    medal: dict
+
+
+@dataclass(frozen=True)
 class Setting:
     site: SiteSetting
     browser: BrowserSetting
     bingo: BingoSetting
     game: GameSetting
     routine: OtherRoutineSetting
+    campus: CampusSetting

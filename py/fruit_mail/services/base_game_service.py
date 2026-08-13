@@ -16,7 +16,7 @@ class BaseGameService(ABC):
     async def execute(self):
         """共通処理"""
 
-        await self.page.goto(self.url, wait_until="domcontentloaded",)
+        await self.page.goto(self.url, wait_until="domcontentloaded")
 
         # 広告が表示されていたら閉じる
         await self._close_interstitial_ad()
@@ -27,7 +27,6 @@ class BaseGameService(ABC):
         close_ad = self.page.locator("#btn-close-ad-interstitial")
 
         if await close_ad.is_visible():
-            print("広告を閉じます")
             await close_ad.click()
             await asyncio.sleep(1)
 

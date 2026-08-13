@@ -1,9 +1,11 @@
 site:
   login_url: https://www.fruitmail.net/login?go_html=https://www.fruitmail.net/game/
+  game_top_url: https://www.fruitmail.net/game/
+  campus_url: https://www.fruitmail.net/game/campus/
   bingo_url: https://www.fruitmail.net/bingo/index.php
   scratch_url: https://www.fruitmail.net/scratch/
-  chirashi_url: https://www.fruitmail.net/chirashi/
   rank_gacha_url: https://www.fruitmail.net/rankgacha
+  chirashi_url: https://www.fruitmail.net/chirashi/
   prize_everyday_url: https://www.fruitmail.net/prize/everyday/
   prize_point_url: https://www.fruitmail.net/prize/point/
   prize_gorgeous_url: https://www.fruitmail.net/prize/gorgeous/
@@ -12,19 +14,29 @@ site:
   prize_roulette_url: https://www.fruitmail.net/prize/roulette/
 
 browser:
-  headless: false
-  timeout: 40000
+  headless: False
+  timeout: 30000
 
 bingo:
   max_click: 4
 
 game:
+  top: True
   bingo: True
   scratch: True
   chirashi: True
   rank_gacha: True
   prize_present_slot: True
   prize_roulette: True
+
+campus:
+  medal:
+    medal_off_marker: medal_icon_off.png
+  sanji:
+    active: True
+    max_combo_attempts: 3
+    db:
+      filepath: ./db/campus.sqlite3
 
 routine:
   prize_everyday: True

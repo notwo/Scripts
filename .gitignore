@@ -1,19 +1,18 @@
 # Python
-/py/*/__pycache__/
-/py/*/*/__pycache__/*
-/py/*/*.pyc
-/py/*/*.pyo
-/py/*/*.pyd
-/py/*/*.log
+/py/**/__pycache__/
+/py/**/*.pyc
+/py/**/*.pyo
+/py/**/*.pyd
+/py/**/*.log
 /py/*/log/*
 /py/*/dist/*
 !/py/*/dist/.gitkeep
 /py/*/screenshots/*
 
 # files
-/py/*/*.csv
-/py/*/*/*.csv
-/py/*/*.pdf
-/py/*/*.txt
-/py/*/*.ttf
-/py/*/*.otf
+/py/**/*.csv
+/py/**/*/*.csv
+/py/**/*.pdf
+/py/**/*.txt
+/py/**/*.ttf
+/py/**/*.otf

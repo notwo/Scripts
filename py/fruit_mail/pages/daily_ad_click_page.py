@@ -1,4 +1,7 @@
-class DailyAdClickPage:
+from pages.base_page import BasePage
+
+
+class DailyAdClickPage(BasePage):
 
     def __init__(self, page):
         self.page = page

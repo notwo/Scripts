@@ -12,11 +12,21 @@ class PrizeRoulettePage(BasePage):
     def __init__(self, page):
         super().__init__(page)
 
+    async def is_applied(self) -> bool:
+        return await self.page.get_by_role(
+            "button",
+            name="応募済み"
+        ).is_visible()
+
     async def is_finished(self) -> bool:
         """
         ルーレット終了画面か判定
         """
-        return await self.page.locator("#end").is_visible()
+        button = self.page.get_by_role(
+            "button",
+            name="応募する"
+        )
+        return await button.is_visible()
 
     async def get_visible_button(self) -> tuple[str, str] | None:
         for selector, name in self.BUTTON_PRIORITY:
@@ -41,7 +51,7 @@ class PrizeRoulettePage(BasePage):
             "button",
             name="応募する"
         ).click()
-    
+
     async def click_confirm_button(self):
         """
         「確認して次へ」
