@@ -38,7 +38,11 @@ class RankGachaPage:
         """
         ガチャを回す
         """
-        await self.page.get_by_role(
+        await self.ok_button()
+
+        button = self.page.get_by_role(
             "button",
             name="ガチャを回す"
-        ).click()
+        )
+        if await button.is_visible(timeout=500):
+            await button.click(timeout=500)

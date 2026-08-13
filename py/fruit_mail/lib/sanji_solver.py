@@ -44,7 +44,6 @@ class SanjiSolver:
         DBに存在しない場合のブルートフォース用に、3個選ぶ全順列を生成する。
         shuffle=True で試行順をランダム化する。
         """
-        print('generate_candidates')
         candidates = list(permutations(available, 3))
         if shuffle:
             random.shuffle(candidates)

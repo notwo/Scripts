@@ -22,12 +22,12 @@ bingo:
 
 game:
   top: True
-  bingo: False
-  scratch: False
-  chirashi: False
-  rank_gacha: False
-  prize_present_slot: False
-  prize_roulette: False
+  bingo: True
+  scratch: True
+  chirashi: True
+  rank_gacha: True
+  prize_present_slot: True
+  prize_roulette: True
 
 campus:
   medal:
@@ -36,10 +36,10 @@ campus:
     active: True
     max_combo_attempts: 3
     db:
-      filepath: ./db/sanji.sqlite3
+      filepath: ./db/campus.sqlite3
 
 routine:
-  prize_everyday: False
-  prize_point: False
-  prize_gorgeous: False
-  daily_ad_click: False
+  prize_everyday: True
+  prize_point: True
+  prize_gorgeous: True
+  daily_ad_click: True

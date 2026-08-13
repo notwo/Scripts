@@ -33,9 +33,6 @@ class SanjiService():
         self._max_combo_attempts = self.setting.campus.sanji["max_combo_attempts"]
 
     async def _transfer_check(self):
-        # クソ広告があればクリック
-        await self.sanji_page.close_ad()
-
         # モーダルが出たら閉じる
         await self.sanji_page.close_modal()
 
@@ -59,6 +56,8 @@ class SanjiService():
 
             except Exception as e:
                 print(f"Sanji Game Error: {e}")
+                # タイムアウトするときは大概広告のせい
+                await self.sanji_page.close_ad()
 
             await asyncio.sleep(5)
 
@@ -67,8 +66,6 @@ class SanjiService():
     async def _run(self):
         """3組の三字熟語を完了させ、最後に clear をクリックする"""
         for attempt in range(1, self._max_combo_attempts + 1):
-            await self._transfer_check()
-
             print(f"--- 三字熟語 {attempt}/{self._max_combo_attempts} 組目 ---")
             await self._solve_one_combo()
 
@@ -80,8 +77,6 @@ class SanjiService():
 
         # 1. DB検索（枝刈りあり）
         db_combo = self.solver.find_sanji_combo(available, self._repo)
-        print('db_combo')
-        print(db_combo)
         excluded: set[tuple[str, str, str]] = set()
 
         if db_combo is not None:
@@ -93,6 +88,7 @@ class SanjiService():
             print("  → DBのデータと実際の正解が一致しませんでした。ブルートフォースに切り替えます。")
 
         # 2. ブルートフォース フォールバック
+        # TODO: ループしないことある
         tried = 0
         for candidate in self.solver.generate_candidates(available=available, shuffle=True):
             if candidate in excluded:
@@ -100,7 +96,6 @@ class SanjiService():
 
             tried += 1
             print(f"  試行{tried}: {''.join(candidate)}")
-            await self._transfer_check()
 
             if await self._try_combo(candidate):
                 word = "".join(candidate)
@@ -108,29 +103,38 @@ class SanjiService():
                 print(f"  → 正解！（ブルートフォース {tried}回目）DBに登録: {word}")
                 return
 
-    async def _try_combo(self, combo: tuple[str, str, str]) -> bool:
-        """1つの組み合わせを実際にクリック→checkで試す。正解ならTrue"""
-        await self._click_kanji_combo(combo)
-        await self.page.locator("#check").click()
-
+    async def _retry(self) -> bool:
         retry_locator = self.page.locator("#retry")
-        if await retry_locator.count() > 0 and await retry_locator.is_visible():
+        if await retry_locator.is_visible(timeout=500):
             # 不正解 → retryで選択をリセットして次の候補へ
             ## あまりに連発して攻撃と判断されないための措置
-            await asyncio.sleep(2)
-            await retry_locator.click()
+            await asyncio.sleep(3)
+            await retry_locator.click(timeout=500)
             await self._wait_for_selection_cleared()
             return False
- 
+
         # 正解 → next クリック
         await self.sanji_page.click_next()
         await self._wait_for_selection_cleared()
         return True
 
+    async def _try_combo(self, combo: tuple[str, str, str]) -> bool:
+        """1つの組み合わせを実際にクリック→checkで試す。正解ならTrue"""
+        await self._click_kanji_combo(combo)
+        await self.page.locator("#check").click()
+
+        # retryが表示されているのになぜか押せない現象が多発するため、timeoutを短めに設定して押せない=例外発生の場合は自身をループさせる
+        try:
+            return await self._retry()
+
+        except Exception as e:
+            await self.sanji_page.close_ad()
+
     # ------------------------------------------------------------------
     # DOM操作の共通処理
     # ------------------------------------------------------------------
     async def _get_available_kanji(self) -> list[str]:
+        #await asyncio.sleep(2)
         """未選択（isSelected及びisUsedが付いていない）漢字要素のテキストを取得"""
         items = self.page.locator(".sanjiSelect")
         count = await items.count()

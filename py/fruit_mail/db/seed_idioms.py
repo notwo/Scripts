@@ -5,17 +5,18 @@
     python3 seed_idioms.py
 
 SEED_WORDS に登録したい熟語（3文字）を追加してから実行してください。
-config/setting.yml の sanji.db.path で指定されたDBファイルに登録されます。
+config/setting.yml の campus.db.path で指定されたDBファイルに登録されます。
 """
 from idiom_repository import IdiomRepository
 
 # ここに事前にわかっている三字熟語を追加してください（3文字であること）
 SEED_WORDS = [
 ]
-
+SEED_PROVERBS = [
+]
 
 def main() -> None:
-    db_path = "./db/sanji.sqlite3"
+    db_path = "./db/campus.sqlite3"
 
     invalid = [w for w in SEED_WORDS if len(w) != 3]
     if invalid:
