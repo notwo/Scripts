@@ -33,14 +33,14 @@ class SanjiService():
         self._max_combo_attempts = self.setting.campus.sanji["max_combo_attempts"]
 
     async def _transfer_check(self):
+        # スタンプGET
+        await self.sanji_page.click_clear()
+
         # モーダルが出たら閉じる
         await self.sanji_page.close_modal()
 
         # restartがあればクリック
         await self.sanji_page.click_restart()
-
-        # スタンプGET
-        await self.sanji_page.click_clear()
 
     async def game_start(self):
         print("======== 三字熟語ゲーム開始 ========")
@@ -88,7 +88,6 @@ class SanjiService():
             print("  → DBのデータと実際の正解が一致しませんでした。ブルートフォースに切り替えます。")
 
         # 2. ブルートフォース フォールバック
-        # TODO: ループしないことある
         tried = 0
         for candidate in self.solver.generate_candidates(available=available, shuffle=True):
             if candidate in excluded:
@@ -105,11 +104,11 @@ class SanjiService():
 
     async def _retry(self) -> bool:
         retry_locator = self.page.locator("#retry")
-        if await retry_locator.is_visible(timeout=500):
+        if await retry_locator.is_visible():
             # 不正解 → retryで選択をリセットして次の候補へ
             ## あまりに連発して攻撃と判断されないための措置
             await asyncio.sleep(3)
-            await retry_locator.click(timeout=500)
+            await retry_locator.click()
             await self._wait_for_selection_cleared()
             return False
 
@@ -119,11 +118,10 @@ class SanjiService():
         return True
 
     async def _try_combo(self, combo: tuple[str, str, str]) -> bool:
-        """1つの組み合わせを実際にクリック→checkで試す。正解ならTrue"""
+        """1つの組み合わせをクリック→checkで試す。正解ならTrue"""
         await self._click_kanji_combo(combo)
-        await self.page.locator("#check").click()
+        await self.sanji_page.click_check()
 
-        # retryが表示されているのになぜか押せない現象が多発するため、timeoutを短めに設定して押せない=例外発生の場合は自身をループさせる
         try:
             return await self._retry()
 
@@ -134,7 +132,9 @@ class SanjiService():
     # DOM操作の共通処理
     # ------------------------------------------------------------------
     async def _get_available_kanji(self) -> list[str]:
-        #await asyncio.sleep(2)
+        # すぐに読み込もうとすると空になる謎現象対策
+        await asyncio.sleep(2)
+
         """未選択（isSelected及びisUsedが付いていない）漢字要素のテキストを取得"""
         items = self.page.locator(".sanjiSelect")
         count = await items.count()
@@ -180,4 +180,5 @@ class SanjiService():
                 .filter(has_text=kanji)
                 .first
             )
-            await locator.click()
+            if await locator.is_visible():
+                await locator.click()
