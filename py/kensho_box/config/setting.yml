@@ -1,0 +1,17 @@
+site:
+  login_url: https://kenshobox.net/login
+  prize_everyday_url: https://kenshobox.net/present/daily
+  treasure_url: https://kenshobox.net/present/treasure
+  bingo_url: https://kenshobox.net/present/bingo
+
+browser:
+  headless: False
+  timeout: 20000
+
+bingo:
+  max_click: 6
+
+routine:
+  prize_everyday: False
+  treasure: False
+  bingo: True
