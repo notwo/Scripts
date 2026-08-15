@@ -50,8 +50,9 @@ class OtherRoutineSetting:
 
 @dataclass(frozen=True)
 class CampusSetting:
-    sanji: dict
     calculate: dict
+    arithmetic: dict
+    sanji: dict
     medal: dict
 
 

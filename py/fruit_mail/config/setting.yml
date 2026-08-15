@@ -33,13 +33,15 @@ campus:
   medal:
     medal_off_marker: medal_icon_off.png
     active: True
+  calculate:
+    active: True
+  arithmetic:
+    active: True
   sanji:
     active: True
     max_combo_attempts: 3
     db:
       filepath: ./db/campus.sqlite3
-  calculate:
-    active: True
 
 routine:
   prize_everyday: True

@@ -2,6 +2,7 @@ from pages.game_top_page import GameTopPage
 from services.base_game_service import BaseGameService
 from services.campus.sanji_service import SanjiService
 from services.campus.calculate_service import CalculateService
+from services.campus.arithmetic_service import ArithmeticService
 
 from db.idiom_repository import IdiomRepository
 
@@ -20,22 +21,8 @@ class GameTopService(BaseGameService):
     async def _campus_url(self):
         return self.setting.site.campus_url
 
-    async def _sanji(self):
-        with IdiomRepository(self.setting.campus.sanji['db']['filepath']) as repo:
-            await self.top_page.click_sanji_link(gamename="三字熟語ゲーム")
-            new_page = self.page.context.pages[-1]
-            try:
-                await new_page.wait_for_load_state("domcontentloaded", timeout=5000)
-            finally:
-                await new_page.locator("#start_game").click(timeout=5000)
-                await self.top_page.click_game_start_dialog()
-                # ここがゲーム本体
-                sanji_service = SanjiService(self.page, repo, self.setting)
-                await sanji_service.game_start()
-                await new_page.close()
-
     async def _calculate(self):
-        await self.top_page.click_sanji_link(gamename="四則演算記号ゲーム")
+        await self.top_page.click_game_link(gamename="四則演算記号ゲーム")
         new_page = self.page.context.pages[-1]
         try:
             await new_page.wait_for_load_state("domcontentloaded", timeout=5000)
@@ -47,6 +34,33 @@ class GameTopService(BaseGameService):
             await calculate_service.game_start()
             await new_page.close()
 
+    async def _arithmetic(self):
+        await self.top_page.click_game_link(gamename="計算ゲーム")
+        new_page = self.page.context.pages[-1]
+        try:
+            await new_page.wait_for_load_state("domcontentloaded", timeout=5000)
+        finally:
+            await new_page.locator("#start_game").click(timeout=5000)
+            await self.top_page.click_game_start_dialog()
+            # ここがゲーム本体
+            calculate_service = ArithmeticService(self.page, self.setting)
+            await calculate_service.game_start()
+            await new_page.close()
+
+    async def _sanji(self):
+        with IdiomRepository(self.setting.campus.sanji['db']['filepath']) as repo:
+            await self.top_page.click_game_link(gamename="三字熟語ゲーム")
+            new_page = self.page.context.pages[-1]
+            try:
+                await new_page.wait_for_load_state("domcontentloaded", timeout=5000)
+            finally:
+                await new_page.locator("#start_game").click(timeout=5000)
+                await self.top_page.click_game_start_dialog()
+                # ここがゲーム本体
+                sanji_service = SanjiService(self.page, repo, self.setting)
+                await sanji_service.game_start()
+                await new_page.close()
+
     async def play(self):
         print("======== ゲームトップ ========")
 
@@ -54,13 +68,17 @@ class GameTopService(BaseGameService):
         await self.top_page.goto_campus(url=await self._campus_url())
 
         # ゲームごとに実行
+        ## 四則演算記号ゲーム
+        if self.setting.campus.calculate['active']:
+            await self._calculate()
+
+        ## 計算ゲーム
+        if self.setting.campus.arithmetic['active']:
+            await self._arithmetic()
+
         ## 三字熟語ゲーム
         if self.setting.campus.sanji['active']:
             await self._sanji()
-
-        ## 三字熟語ゲーム
-        if self.setting.campus.calculate['active']:
-            await self._calculate()
 
         ## 他のゲーム
 

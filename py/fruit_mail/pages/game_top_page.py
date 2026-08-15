@@ -9,7 +9,7 @@ class GameTopPage(BasePage):
     async def goto_campus(self, url):
         await self.page.goto(url, wait_until="domcontentloaded")
 
-    async def click_sanji_link(self, gamename):
+    async def click_game_link(self, gamename):
         await self.page.get_by_role(
             "link",
             name=gamename
