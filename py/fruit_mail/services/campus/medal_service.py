@@ -16,8 +16,12 @@ class MedalService:
         self.page = page
         self.ad_killer = AdKiller(page=page)
         self._off_marker = setting.campus.medal["medal_off_marker"]
+        self._active = setting.campus.medal["active"]
 
     async def run(self) -> None:
+        if not self._active:
+            return
+
         while True:
             try:
                 target = await self._find_next_off_medal()
