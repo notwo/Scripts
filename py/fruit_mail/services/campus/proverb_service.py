@@ -32,18 +32,9 @@ class ProverbService():
         self.setting = setting
         self._max_combo_attempts = self.setting.campus.proverb["max_combo_attempts"]
 
-    async def _transfer_check(self):
-        # スタンプGET
-        await self.proverb_page.click_clear()
-
-        # モーダルが出たら閉じる
-        await self.proverb_page.close_modal()
-
-        # restartがあればクリック
-        await self.proverb_page.click_restart()
-
     async def game_start(self):
         print("======== ことわざクイズ開始 ========")
+
         while True:
             try:
                 if await self.proverb_page.is_finished():
@@ -52,7 +43,7 @@ class ProverbService():
 
                 await self._run()
 
-                await self._transfer_check()
+                await self.proverb_page.transfer_check()
 
             except Exception as e:
                 print(f"Proverb Game Error: {e}")
@@ -74,9 +65,6 @@ class ProverbService():
     # ------------------------------------------------------------------ 
     async def _solve_one_combo(self) -> None:
         available = await self._get_available_verbose()
-        print('available')
-        print(available)
-        return
 
         # 1. DB検索（枝刈りあり）
         db_combo = self.solver.find_proverb_combo(available, self._repo)

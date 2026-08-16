@@ -34,6 +34,7 @@ class SanjiService():
 
     async def game_start(self):
         print("======== 三字熟語ゲーム開始 ========")
+
         while True:
             try:
                 if await self.sanji_page.is_finished():

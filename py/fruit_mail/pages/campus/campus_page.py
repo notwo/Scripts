@@ -14,6 +14,10 @@ class CampusPage(BasePage):
         # 「もう一度プレイする」があればクリック
         await self._click_restart()
 
+    async def is_finished(self) -> bool:
+        await asyncio.sleep(2)
+        return await self.page.locator("#lead_tomorrow").is_visible()
+
     async def click_check(self):
         button = self.page.locator("#check")
         if await button.is_visible():
