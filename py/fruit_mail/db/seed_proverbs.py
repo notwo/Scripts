@@ -10,6 +10,7 @@ config/setting.yml の campus.db.path で指定されたDBファイルに登録�
 from proverb_repository import ProverbRepository
 from pathlib import Path
 
+
 # ここに事前にわかっている三字熟語を追加してください（3文字であること）
 SEED_PROVERBS = [
 ]

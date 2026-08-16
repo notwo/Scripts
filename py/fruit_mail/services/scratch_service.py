@@ -6,7 +6,6 @@ class ScratchService(BaseGameService):
 
     def __init__(self, page, setting):
         super().__init__(page, setting)
-        self.page = page
         self.scratch_page = ScratchPage(page)
 
     @property
@@ -32,7 +31,7 @@ class ScratchService(BaseGameService):
 
           await link.click()
 
-          await self.page.wait_for_timeout(500)
+          await self.page.wait_for_timeout(1000)
 
           if len(self.page.context.pages) > before:
               new_page = self.page.context.pages[-1]

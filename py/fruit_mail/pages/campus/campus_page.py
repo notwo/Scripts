@@ -44,11 +44,29 @@ class CampusPage(BasePage):
             await close_button.click()
 
     async def _click_restart(self):
-        await asyncio.sleep(3)
+        # ゲーム実施中であれば何もしない
+        button = self.page.locator("#check")
+        if await button.is_visible():
+            return
+
+        await asyncio.sleep(5)
 
         link = self.page.get_by_role(
             "link",
             name="もう一度プレイする"
         )
+        print(link)
+        print('link')
+        await link.click(force=True)
+        #if await link.is_visible():
+        #    await link.click(force=True)
+
+    async def click_restart_again(self):
+        link = self.page.get_by_role(
+            "link",
+            name="もう一度プレイする"
+        )
+        print(link)
+        print('link2')
         if await link.is_visible():
-            await link.click()
+            await link.click(force=True)

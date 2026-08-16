@@ -55,6 +55,8 @@ class SanjiService():
         print("======== 三字熟語ゲーム終了 ========")
 
     async def _run(self):
+        await self.sanji_page.click_restart_again()
+
         """3組の三字熟語を完了させ、最後に clear をクリックする"""
         for attempt in range(1, self._max_combo_attempts + 1):
             print(f"--- 三字熟語 {attempt}/{self._max_combo_attempts} 組目 ---")
