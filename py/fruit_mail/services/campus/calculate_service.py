@@ -13,18 +13,9 @@ class CalculateService():
         self.medal_service = MedalService(page=page,setting=setting)
         self.setting = setting
 
-    async def _transfer_check(self):
-        # スタンプGET
-        await self.calculate_page.click_clear()
-
-        # モーダルが出たら閉じる
-        await self.calculate_page.close_modal()
-
-        # restartがあればクリック
-        await self.calculate_page.click_restart()
-
     async def game_start(self):
         print("======== 四則演算記号ゲーム開始 ========")
+
         while True:
             try:
                 if await self.calculate_page.is_finished():
@@ -33,7 +24,7 @@ class CalculateService():
 
                 await self._run()
 
-                await self._transfer_check()
+                await self.calculate_page.transfer_check()
 
             except Exception as e:
                 print(f"Calculate Game Error: {e}")

@@ -52,6 +52,7 @@ class OtherRoutineSetting:
 class CampusSetting:
     calculate: dict
     arithmetic: dict
+    proverb: dict
     sanji: dict
     medal: dict
 

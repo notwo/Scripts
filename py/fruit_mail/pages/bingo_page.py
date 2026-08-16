@@ -4,7 +4,7 @@ from pages.base_page import BasePage
 class BingoPage(BasePage):
 
     def __init__(self, page):
-        self.page = page
+        super().__init__(page)
 
     async def has_start_button(self):
         return await self.page.locator("#bingo_start").is_visible()

@@ -19,10 +19,9 @@ class BingoService(BaseGameService):
                 print("======== ビンゴ開始 ========")
 
                 result = await self._run()
-                if result:
+                if not result:
+                    print("======== ビンゴ終了 ========")
                     break
-
-                print("======== ビンゴ終了 ========")
 
             except Exception as e:
                 await self.ad_killer.kill_ad()
@@ -31,7 +30,7 @@ class BingoService(BaseGameService):
         await self.bingo_page.entry()
 
         await asyncio.sleep(3)
-        count = await self.bingo_page.before_select_count() + 1
+        count = await self.bingo_page.before_select_count()
 
         click_count = min(
             self.setting.bingo.max_click,

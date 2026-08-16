@@ -51,9 +51,12 @@ class ArithmeticService():
             .replace("ー", "-")
         )
 
-        keisan_solve = await self.page.locator("#keisan_solve").inner_text()
+        keisan_solve = self.page.locator("#keisan_solve")
+        if not await keisan_solve.is_visible():
+            return
+        keisan_solve_text = await keisan_solve.inner_text()
 
-        correct_numbers, _ = self.solver.solve_puzzle(template=template, target=int(keisan_solve))
+        correct_numbers, _ = self.solver.solve_puzzle(template=template, target=int(keisan_solve_text))
 
         for correct_number in correct_numbers:
             for i in range(await items.count()):

@@ -4,7 +4,7 @@ from pages.base_page import BasePage
 class GameTopPage(BasePage):
 
     def __init__(self, page):
-        self.page = page
+        super().__init__(page)
 
     async def goto_campus(self, url):
         await self.page.goto(url, wait_until="domcontentloaded")

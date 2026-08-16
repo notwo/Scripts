@@ -15,6 +15,10 @@ class PrizeEverydayService(BaseGameService):
     async def play(self):
         print("======== 本日の日替わり懸賞開始 ========")
 
+        if await self.prize_page.finished():
+            print("======== 応募済み ========")
+            return
+
         await self.prize_page.click_apply_button()
 
         await self.prize_page.click_confirm_button()
@@ -24,4 +28,3 @@ class PrizeEverydayService(BaseGameService):
         await self.prize_page.click_final_apply_button()
 
         print("======== 応募完了 ========")
-

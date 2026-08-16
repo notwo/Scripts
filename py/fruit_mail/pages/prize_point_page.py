@@ -4,7 +4,7 @@ from pages.base_page import BasePage
 class PrizePointPage(BasePage):
 
     def __init__(self, page):
-        self.page = page
+        super().__init__(page)
 
     async def get_apply_numbers(self) -> list[dict]:
         """

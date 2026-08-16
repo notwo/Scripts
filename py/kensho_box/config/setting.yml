@@ -12,6 +12,6 @@ bingo:
   max_click: 6
 
 routine:
-  prize_everyday: False
-  treasure: False
+  prize_everyday: True
+  treasure: True
   bingo: True

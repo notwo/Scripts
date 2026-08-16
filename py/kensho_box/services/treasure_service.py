@@ -15,6 +15,10 @@ class TreasureService(BaseGameService):
     async def play(self):
         print("======== ポイント懸賞開始 ========")
 
+        if await self.treasure_page.finished():
+            print("======== 応募済み ========")
+            return
+
         await self.treasure_page.click_apply_button()
 
         await self.treasure_page.click_confirm_button()

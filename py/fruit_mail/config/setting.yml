@@ -15,36 +15,41 @@ site:
 
 browser:
   headless: False
-  timeout: 20000
+  timeout: 10000
 
 bingo:
   max_click: 4
 
 game:
-  top: True
-  bingo: True
-  scratch: True
-  chirashi: True
-  rank_gacha: True
+  top: False
+  bingo: False
+  scratch: False
+  chirashi: False
+  rank_gacha: False
   prize_present_slot: True
   prize_roulette: True
 
 campus:
   medal:
     medal_off_marker: medal_icon_off.png
-    active: True
+    active: False
   calculate:
-    active: True
+    active: False
   arithmetic:
-    active: True
-  sanji:
-    active: True
+    active: False
+  proverb:
+    active: False
     max_combo_attempts: 3
     db:
-      filepath: ./db/campus.sqlite3
+      filepath: ./db/campus.db
+  sanji:
+    active: False
+    max_combo_attempts: 3
+    db:
+      filepath: ./db/campus.db
 
 routine:
-  prize_everyday: True
-  prize_point: True
-  prize_gorgeous: True
-  daily_ad_click: True
+  prize_everyday: False
+  prize_point: False
+  prize_gorgeous: False
+  daily_ad_click: False
