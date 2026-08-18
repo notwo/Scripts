@@ -15,7 +15,7 @@ site:
 
 browser:
   headless: False
-  timeout: 10000
+  timeout: 15000 # これより小さいとログイン失敗する
 
 bingo:
   max_click: 4
@@ -30,9 +30,6 @@ game:
   prize_roulette: True
 
 campus:
-  medal:
-    medal_off_marker: medal_icon_off.png
-    active: True
   calculate:
     active: True
   arithmetic:
@@ -47,6 +44,9 @@ campus:
     max_combo_attempts: 3
     db:
       filepath: ./db/campus.db
+  medal:
+    medal_off_marker: medal_icon_off.png
+    active: False
 
 routine:
   prize_everyday: True

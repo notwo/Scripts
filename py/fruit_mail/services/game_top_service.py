@@ -6,6 +6,7 @@ from services.campus.calculate_service import CalculateService
 from services.campus.arithmetic_service import ArithmeticService
 
 from db.idiom_repository import IdiomRepository
+from db.proverb_repository import ProverbRepository
 
 
 class GameTopService(BaseGameService):
@@ -60,7 +61,7 @@ class GameTopService(BaseGameService):
                 await sanji_service.game_start()
 
     async def _proverb(self):
-        with IdiomRepository(self.setting.campus.proverb['db']['filepath']) as repo:
+        with ProverbRepository(self.setting.campus.proverb['db']['filepath']) as repo:
             await self.top_page.click_game_link(gamename="ことわざクイズ")
             try:
                 await self.ad_killer.kill_ad()

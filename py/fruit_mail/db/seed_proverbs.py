@@ -19,24 +19,22 @@ SEED_PROVERBS = [
 def main() -> None:
     db_path = Path("./db/campus.db").resolve()
 
-    invalid = [w for w in SEED_PROVERBS]
-    if invalid:
-        print(f"⚠ 3文字でない単語が含まれています。登録をスキップします: {invalid}")
-
     valid_proverbs = [w for w in SEED_PROVERBS]
+    #if len(valid_proverbs) == 0:
+    #    return
 
     with ProverbRepository(db_path) as repo:
         print(f"登録対象: {len(valid_proverbs)}件")
 
         # DBに既に存在する単語を確認
-        existing = [w for w in valid_proverbs if repo.exists(w.split('|'))]
+        existing = [w for w in valid_proverbs if repo.exists(*w.split('|'))]
 
         if existing:
             print(f"⚠ 既にDBに存在するため登録されない単語: {existing}")
         else:
             print("✓ DB上の重複なし")
 
-        repo.add_many(valid_proverbs)
+        repo.register_many(valid_proverbs)
         print(f"{len(valid_proverbs)}件を登録しました（DB: {db_path}）")
 
 
