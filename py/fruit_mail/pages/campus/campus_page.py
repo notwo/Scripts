@@ -1,4 +1,5 @@
 import asyncio
+
 from pages.base_page import BasePage
 
 
@@ -33,7 +34,7 @@ class CampusPage(BasePage):
 
         button = self.page.locator("#clear")
         if await button.is_visible():
-            await button.click(timeout=500)
+            await button.click(timeout=1000)
 
     async def _close_modal(self):
         await asyncio.sleep(3)
@@ -55,18 +56,12 @@ class CampusPage(BasePage):
             "link",
             name="もう一度プレイする"
         )
-        print(link)
-        print('link')
         await link.click(force=True)
-        #if await link.is_visible():
-        #    await link.click(force=True)
 
     async def click_restart_again(self):
         link = self.page.get_by_role(
             "link",
             name="もう一度プレイする"
         )
-        print(link)
-        print('link2')
         if await link.is_visible():
             await link.click(force=True)

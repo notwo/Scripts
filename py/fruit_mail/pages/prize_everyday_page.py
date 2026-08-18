@@ -36,7 +36,7 @@ class PrizeEverydayPage(BasePage):
         await self.page.get_by_role(
             "button",
             name="応募する"
-        ).click()
+        ).click(timeout=1000)
 
     async def click_confirm_button(self):
         """

@@ -63,7 +63,7 @@ class TreasurePage(BasePage):
 
     async def click_final_apply_button(self):
         """
-        最後の「応募する」
+        最後の「承諾する」
         """
         await asyncio.sleep(3)
         await self.close_ad()
@@ -72,6 +72,4 @@ class TreasurePage(BasePage):
             "button",
             name="承諾する"
         )
-        if await button.is_visible():
-            await button.click()
-
+        await button.click(force=True)

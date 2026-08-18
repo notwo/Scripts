@@ -1,8 +1,8 @@
 import asyncio
 
+from lib.proverb_solver import ProverbSolver
 from pages.campus.proverb_page import ProverbPage
 from services.campus.medal_service import MedalService
-from lib.proverb_solver import ProverbSolver
 
 
 class ProverbService():
