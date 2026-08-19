@@ -88,9 +88,8 @@ class ProverbService():
             print(f"  試行{tried}: {''.join(candidate)}")
 
             if await self._try_combo(candidate):
-                word = "".join(candidate)
-                self._repo.add(word)
-                print(f"  → 正解！（ブルートフォース {tried}回目）DBに登録: {word}")
+                self._repo.register(*candidate)
+                print(f"  → 正解！（ブルートフォース {tried}回目）DBに登録: {','.join(candidate)}")
                 return
 
     async def _retry(self) -> bool:

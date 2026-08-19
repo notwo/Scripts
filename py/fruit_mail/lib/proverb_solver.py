@@ -1,5 +1,5 @@
 import random
-from itertools import combinations
+from itertools import permutations
 from typing import Iterator
 
 from db.proverb_repository import ProverbRepository
@@ -18,13 +18,18 @@ class ProverbSolver:
         """
         DBに問い合わせてことわざの正解ペアを探す。
         見つからなければ None を返す（＝ブルートフォースへフォールバックする合図）。
+
+        ことわざは順不同ではない（head→tailの語順を持つ）ため、
+        repo.find_pair() を使い、available内でどちらを先に見つけたかに
+        関わらず、DBに保存されている本来の順番 (head, tail) を返す。
         """
         for first in available:
             rest = [k for k in available if k != first]
 
             for second in rest:
-                if repo.exists(first, second):
-                    return (first, second)
+                pair = repo.find_pair(first, second)
+                if pair is not None:
+                    return pair
 
         return None
 
@@ -36,7 +41,7 @@ class ProverbSolver:
         DBに存在しない場合のブルートフォース用に、2個選ぶ全組み合わせを生成する。
         shuffle=True で試行順をランダム化する。
         """
-        candidates = list(combinations(available, 2))
+        candidates = list(permutations(available, 2))
         if shuffle:
             random.shuffle(candidates)
         yield from candidates
