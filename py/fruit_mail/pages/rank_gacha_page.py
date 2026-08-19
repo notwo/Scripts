@@ -1,7 +1,10 @@
-class RankGachaPage:
+from pages.base_page import BasePage
+
+
+class RankGachaPage(BasePage):
 
     def __init__(self, page):
-        self.page = page
+        super().__init__(page)
 
     async def is_finished(self) -> bool:
         text = self.page.locator("div").get_by_text(
@@ -9,11 +12,6 @@ class RankGachaPage:
             exact=True
         )
         return await text.is_visible(timeout=1000)
-
-    async def close_ad(self):
-        text = self.page.locator("div.continue-prompt-text")
-        if await text.is_visible(timeout=1000):
-            text.click()
 
     async def ok_button(self):
         """

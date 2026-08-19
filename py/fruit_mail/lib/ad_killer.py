@@ -25,6 +25,31 @@ class AdKiller:
 
                 await button.click(timeout=1000, force=True)
                 return
+
+            except Exception as e:
+                # 広告iframeが再生成されることがあるので無視
+                print(f"広告iframe更新: {type(e).__name__}")
+                continue
+
+        # 1種類とは限らないため、見つけるたびに要追加
+        for frame in list(self.page.frames):
+            try:
+                close = frame.locator("#dismiss-button")
+
+                if await close.count() == 0:
+                    continue
+
+                if not await close.is_visible():
+                    continue
+
+                button = frame.locator("#dismiss-button-element")
+
+                if await button.count() == 0:
+                    continue
+
+                await button.click(timeout=1000, force=True)
+                return
+
             except Exception as e:
                 # 広告iframeが再生成されることがあるので無視
                 print(f"広告iframe更新: {type(e).__name__}")
@@ -33,6 +58,12 @@ class AdKiller:
         # ② 通常ページの広告
         try:
             close = self.page.locator("#dismiss-button")
+
+            if await close.count() > 0 and await close.is_visible():
+                await close.click(timeout=1000, force=True)
+                return True
+
+            close = self.page.locator(".smarttag-adx-inst__close-btn")
 
             if await close.count() > 0 and await close.is_visible():
                 await close.click(timeout=1000, force=True)

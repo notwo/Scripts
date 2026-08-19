@@ -4,7 +4,7 @@ from pages.base_page import BasePage
 class ScratchPage(BasePage):
 
     def __init__(self, page):
-        self.page = page
+        super().__init__(page)
 
     async def scratch_link_count(self):
         return await self.page.locator(".scratch_link").count()

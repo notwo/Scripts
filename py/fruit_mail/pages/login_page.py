@@ -1,7 +1,10 @@
-class LoginPage:
+from pages.base_page import BasePage
+
+
+class LoginPage(BasePage):
 
     def __init__(self, page):
-        self.page = page
+        super().__init__(page)
 
     async def is_login_page(self):
         return await self.page.locator("#user_identifier").count() > 0
@@ -12,8 +15,3 @@ class LoginPage:
 
     async def click_login(self):
         await self.page.locator('button[type="submit"]').click()
-
-    async def close_ad(self):
-        ad = self.page.locator("#btn-close-ad-interstitial")
-        if await ad.is_visible():
-            await ad.click()

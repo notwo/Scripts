@@ -33,5 +33,6 @@ class RankGachaService(BaseGameService):
 
             except Exception as e:
                 print(f"エラー: {e}")
+                await self.gacha_page.close_ad()
 
         print("======== ガチャ終了 ========")

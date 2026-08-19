@@ -4,7 +4,7 @@ from pages.base_page import BasePage
 class PrizeEverydayPage(BasePage):
 
     def __init__(self, page):
-        self.page = page
+        super().__init__(page)
 
     async def get_apply_numbers(self) -> list[dict]:
         """
@@ -36,7 +36,7 @@ class PrizeEverydayPage(BasePage):
         await self.page.get_by_role(
             "button",
             name="応募する"
-        ).click()
+        ).click(timeout=1000)
 
     async def click_confirm_button(self):
         """

@@ -53,6 +53,13 @@ class IdiomRepository:
         )
         self._conn.commit()
 
+    def exists(self, word: str) -> bool:
+        row = self._conn.execute(
+            "SELECT 1 FROM idioms WHERE word = ? LIMIT 1",
+            (word,),
+        ).fetchone()
+        return row is not None
+
     def close(self) -> None:
         self._conn.close()
 
