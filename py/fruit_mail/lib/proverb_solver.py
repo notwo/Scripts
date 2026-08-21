@@ -20,7 +20,7 @@ class ProverbSolver:
         見つからなければ None を返す（＝ブルートフォースへフォールバックする合図）。
 
         ことわざは順不同ではない（head→tailの語順を持つ）ため、
-        repo.find_pair() を使い、available内でどちらを先に見つけたかに
+        repo.exists() を使い、available内でどちらを先に見つけたかに
         関わらず、DBに保存されている本来の順番 (head, tail) を返す。
         """
         for first in available:

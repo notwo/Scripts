@@ -53,6 +53,7 @@ class CampusSetting:
     calculate: dict
     arithmetic: dict
     proverb: dict
+    complex_kanji: dict
     sanji: dict
     medal: dict
 

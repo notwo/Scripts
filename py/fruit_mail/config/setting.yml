@@ -39,6 +39,11 @@ campus:
     max_combo_attempts: 3
     db:
       filepath: ./db/campus.db
+  complex_kanji:
+    active: True
+    max_combo_attempts: 3
+    db:
+      filepath: ./db/campus.db
   sanji:
     active: True
     max_combo_attempts: 3
@@ -46,7 +51,7 @@ campus:
       filepath: ./db/campus.db
   medal:
     medal_off_marker: medal_icon_off.png
-    active: False
+    active: True
 
 routine:
   prize_everyday: True

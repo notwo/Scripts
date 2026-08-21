@@ -11,7 +11,7 @@ class RankGachaPage(BasePage):
             "プレイ可能数：0",
             exact=True
         )
-        return await text.is_visible(timeout=1000)
+        return await text.is_visible()
 
     async def ok_button(self):
         """
@@ -22,14 +22,14 @@ class RankGachaPage(BasePage):
             name="OK"
         )
         if await button.is_visible():
-          await button.click(timeout=1000)
+          await button.click()
 
     async def back_to_gacha(self):
         """
         プレイ画面へ戻る
         """
         link = self.page.locator("a.rankgacha_result__backToLink")
-        if await link.is_visible(timeout=1000):
+        if await link.is_visible():
           await link.click()
 
     async def click_button(self):
@@ -42,5 +42,5 @@ class RankGachaPage(BasePage):
             "button",
             name="ガチャを回す"
         )
-        if await button.is_visible(timeout=1000):
-            await button.click(timeout=1000)
+        if await button.is_visible():
+            await button.click()

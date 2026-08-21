@@ -1,12 +1,14 @@
 from pages.game_top_page import GameTopPage
 from services.base_game_service import BaseGameService
-from services.campus.sanji_service import SanjiService
 from services.campus.proverb_service import ProverbService
+from services.campus.complex_kanji_service import ComplexKanjiService
+from services.campus.sanji_service import SanjiService
 from services.campus.calculate_service import CalculateService
 from services.campus.arithmetic_service import ArithmeticService
 
 from db.idiom_repository import IdiomRepository
 from db.proverb_repository import ProverbRepository
+from db.complex_kanji_repository import ComplexKanjiRepository
 
 
 class GameTopService(BaseGameService):
@@ -47,19 +49,6 @@ class GameTopService(BaseGameService):
             calculate_service = ArithmeticService(self.page, self.setting)
             await calculate_service.game_start()
 
-    async def _sanji(self):
-        with IdiomRepository(self.setting.campus.sanji['db']['filepath']) as repo:
-            await self.top_page.click_game_link(gamename="三字熟語ゲーム")
-            try:
-                await self.ad_killer.kill_ad()
-                await self.page.wait_for_load_state("domcontentloaded", timeout=5000)
-            finally:
-                await self.page.locator("#start_game").click(timeout=5000)
-                await self.top_page.click_game_start_dialog()
-                # ここがゲーム本体
-                sanji_service = SanjiService(self.page, repo, self.setting)
-                await sanji_service.game_start()
-
     async def _proverb(self):
         with ProverbRepository(self.setting.campus.proverb['db']['filepath']) as repo:
             await self.top_page.click_game_link(gamename="ことわざクイズ")
@@ -72,6 +61,32 @@ class GameTopService(BaseGameService):
                 # ここがゲーム本体
                 proverb_service = ProverbService(self.page, repo, self.setting)
                 await proverb_service.game_start()
+
+    async def _kanji(self):
+        with ComplexKanjiRepository(self.setting.campus.complex_kanji['db']['filepath']) as repo:
+            await self.top_page.click_game_link(gamename="難読漢字")
+            try:
+                await self.ad_killer.kill_ad()
+                await self.page.wait_for_load_state("domcontentloaded", timeout=5000)
+            finally:
+                await self.page.locator("#start_game").click(timeout=5000)
+                await self.top_page.click_game_start_dialog()
+                # ここがゲーム本体
+                complex_kanji_service = ComplexKanjiService(self.page, repo, self.setting)
+                await complex_kanji_service.game_start()
+
+    async def _sanji(self):
+        with IdiomRepository(self.setting.campus.sanji['db']['filepath']) as repo:
+            await self.top_page.click_game_link(gamename="三字熟語ゲーム")
+            try:
+                await self.ad_killer.kill_ad()
+                await self.page.wait_for_load_state("domcontentloaded", timeout=5000)
+            finally:
+                await self.page.locator("#start_game").click(timeout=5000)
+                await self.top_page.click_game_start_dialog()
+                # ここがゲーム本体
+                sanji_service = SanjiService(self.page, repo, self.setting)
+                await sanji_service.game_start()
 
     async def play(self):
         print("======== ゲームトップ ========")
@@ -88,13 +103,17 @@ class GameTopService(BaseGameService):
         if self.setting.campus.arithmetic['active']:
             await self._arithmetic()
 
-        ## 三字熟語ゲーム
-        if self.setting.campus.sanji['active']:
-            await self._sanji()
-
         ## ことわざクイズ
         if self.setting.campus.proverb['active']:
             await self._proverb()
+
+        ## 難読漢字
+        if self.setting.campus.complex_kanji['active']:
+            await self._kanji()
+
+        ## 三字熟語ゲーム
+        if self.setting.campus.sanji['active']:
+            await self._sanji()
 
         ## 他のゲーム
 
