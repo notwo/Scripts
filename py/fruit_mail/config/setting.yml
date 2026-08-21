@@ -34,6 +34,8 @@ campus:
     active: True
   arithmetic:
     active: True
+  balance:
+    active: True
   proverb:
     active: True
     max_combo_attempts: 3
