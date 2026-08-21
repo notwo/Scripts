@@ -40,7 +40,7 @@ class CalculateService():
 
         items = self.page.locator(".shisokuenzanSelect")
         numbers = await self.page.locator(".shisokuenzanUserAnswer__number").all()
-        last_number = await self.page.locator(".shisokuenzanUserAnswer__solve").first.inner_text(timeout=5000)
+        last_number = await self.page.locator(".shisokuenzanUserAnswer__solve").first.inner_text()
 
         number_values = []
 

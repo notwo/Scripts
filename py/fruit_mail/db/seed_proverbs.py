@@ -20,8 +20,8 @@ def main() -> None:
     db_path = Path("./db/campus.db").resolve()
 
     valid_proverbs = [w for w in SEED_PROVERBS]
-    #if len(valid_proverbs) == 0:
-    #    return
+    if len(valid_proverbs) == 0:
+        return
 
     with ProverbRepository(db_path) as repo:
         print(f"登録対象: {len(valid_proverbs)}件")

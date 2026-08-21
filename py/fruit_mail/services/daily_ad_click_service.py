@@ -27,7 +27,7 @@ class DailyAdClickService(BaseGameService):
             
             await link.click()
 
-            await self.page.wait_for_timeout(500)
+            await self.page.wait_for_timeout(5000)
 
             if len(self.page.context.pages) > before:
                 new_page = self.page.context.pages[-1]
