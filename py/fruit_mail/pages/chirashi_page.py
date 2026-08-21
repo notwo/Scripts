@@ -23,7 +23,7 @@ class ChirashiPage(BasePage):
 
         zipcode_button = self.page.locator("#chirashi_zipcodeButton")
         if await zipcode_button.is_visible():
-            zipcode_button.click()
+            await zipcode_button.click()
 
     async def click_button(self):
         """

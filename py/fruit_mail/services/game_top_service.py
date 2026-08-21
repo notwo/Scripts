@@ -5,6 +5,7 @@ from services.campus.complex_kanji_service import ComplexKanjiService
 from services.campus.sanji_service import SanjiService
 from services.campus.calculate_service import CalculateService
 from services.campus.arithmetic_service import ArithmeticService
+from services.campus.balance_service import BalanceService
 
 from db.idiom_repository import IdiomRepository
 from db.proverb_repository import ProverbRepository
@@ -46,8 +47,20 @@ class GameTopService(BaseGameService):
             await self.page.locator("#start_game").click(timeout=5000)
             await self.top_page.click_game_start_dialog()
             # ここがゲーム本体
-            calculate_service = ArithmeticService(self.page, self.setting)
-            await calculate_service.game_start()
+            arithmetic_service = ArithmeticService(self.page, self.setting)
+            await arithmetic_service.game_start()
+
+    async def _balance(self):
+        await self.top_page.click_game_link(gamename="バランスクイズ")
+        try:
+            await self.ad_killer.kill_ad()
+            await self.page.wait_for_load_state("domcontentloaded", timeout=5000)
+        finally:
+            await self.page.locator("#start_game").click(timeout=5000)
+            await self.top_page.click_game_start_dialog()
+            # ここがゲーム本体
+            balance_service = BalanceService(self.page, self.setting)
+            await balance_service.game_start()
 
     async def _proverb(self):
         with ProverbRepository(self.setting.campus.proverb['db']['filepath']) as repo:
@@ -102,6 +115,10 @@ class GameTopService(BaseGameService):
         ## 計算ゲーム
         if self.setting.campus.arithmetic['active']:
             await self._arithmetic()
+
+        ## バランスゲーム
+        if self.setting.campus.balance['active']:
+            await self._balance()
 
         ## ことわざクイズ
         if self.setting.campus.proverb['active']:

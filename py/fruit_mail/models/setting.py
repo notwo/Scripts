@@ -52,6 +52,7 @@ class OtherRoutineSetting:
 class CampusSetting:
     calculate: dict
     arithmetic: dict
+    balance: dict
     proverb: dict
     complex_kanji: dict
     sanji: dict
