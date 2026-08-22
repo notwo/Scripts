@@ -35,6 +35,16 @@ class SanjiSolver:
 
         return None
 
+    def find_words_by_first_char(self, words: list[str], char: str) -> str | None:
+        """
+        指定した1文字で始まる文字列をすべて返す。
+        見つからない場合は空のリストを返す。
+        """
+        return [
+            word
+            for word in words
+            if word.startswith(char)
+        ]
 
     def generate_candidates(
         self,

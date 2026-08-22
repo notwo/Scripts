@@ -47,25 +47,31 @@ class PrizeRoulettePage(BasePage):
         """
         最初の「応募する」
         """
-        await self.page.get_by_role(
+        button = self.page.get_by_role(
             "button",
             name="応募する"
-        ).click()
+        )
+        if await button.is_visible():
+            await button.click()
 
     async def click_confirm_button(self):
         """
         「確認して次へ」
         """
-        await self.page.get_by_role(
+        button = self.page.get_by_role(
             "button",
             name="確認して次へ"
-        ).click()
+        )
+        if await button.is_visible():
+            await button.click()
 
     async def click_final_apply_button(self):
         """
         最後の「承諾する」
         """
-        await self.page.get_by_role(
+        button = self.page.get_by_role(
             "button",
             name="承諾する"
-        ).click()
+        )
+        if await button.is_visible():
+            await button.click()

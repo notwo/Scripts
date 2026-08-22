@@ -14,10 +14,11 @@ from db.complex_kanji_repository import ComplexKanjiRepository
 
 class GameTopService(BaseGameService):
 
-    def __init__(self, page, setting):
+    def __init__(self, page, setting, context):
         super().__init__(page, setting)
         self.top_page = GameTopPage(page)
         self.setting = setting
+        self.context = context
 
     @property
     def url(self) -> str:
@@ -98,7 +99,7 @@ class GameTopService(BaseGameService):
                 await self.page.locator("#start_game").click(timeout=5000)
                 await self.top_page.click_game_start_dialog()
                 # ここがゲーム本体
-                sanji_service = SanjiService(self.page, repo, self.setting)
+                sanji_service = SanjiService(self.page, repo, self.setting, self.context)
                 await sanji_service.game_start()
 
     async def play(self):
