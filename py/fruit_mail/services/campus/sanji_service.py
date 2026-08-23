@@ -23,13 +23,14 @@ class SanjiService():
       (7)    clear をクリック
     """
 
-    def __init__(self, page, repo, setting):
+    def __init__(self, page, repo, setting, context):
         self.page = page
         self.sanji_page = SanjiPage(page)
         self.solver = SanjiSolver()
         self.medal_service = MedalService(page=page,setting=setting)
         self._repo = repo
         self.setting = setting
+        self.context = context
         self._max_combo_attempts = self.setting.campus.sanji["max_combo_attempts"]
 
     async def game_start(self):
@@ -55,7 +56,9 @@ class SanjiService():
         print("======== 三字熟語ゲーム終了 ========")
 
     async def _run(self):
-        await self.sanji_page.click_restart_again()
+        items = self.page.locator(".sanjiSelect")
+        if await items.count() == 0:
+            return
 
         """3組の三字熟語を完了させ、最後に clear をクリックする"""
         for attempt in range(1, self._max_combo_attempts + 1):
@@ -78,9 +81,19 @@ class SanjiService():
             if await self._try_combo(db_combo):
                 print(f"  → 正解！（DB検索）")
                 return
+            print("  → DBのデータと実際の正解が一致しませんでした。外部サイトアクセスに切り替えます。")
+
+        # 2. 別サイトで検索
+        search_result = await self._search_by_external_site(available=available)
+        if search_result is not None:
+            if await self._try_combo(search_result):
+                word = "".join(search_result)
+                self._repo.add(word)
+                print(f"  → 正解！ DBに登録: {word}")
+                return
             print("  → DBのデータと実際の正解が一致しませんでした。ブルートフォースに切り替えます。")
 
-        # 2. ブルートフォース フォールバック
+        # 3. ブルートフォース フォールバック
         tried = 0
         for candidate in self.solver.generate_candidates(available=available, shuffle=True):
             if candidate in excluded:
@@ -94,6 +107,40 @@ class SanjiService():
                 self._repo.add(word)
                 print(f"  → 正解！（ブルートフォース {tried}回目）DBに登録: {word}")
                 return
+
+    async def _search_by_external_site(self, available: list[str]):
+        search_page = await self.context.new_page()
+
+        await search_page.goto("https://kanji.reader.bz/jukugo_3moji/")
+
+        for char in available:
+            await search_page.locator('input.input_main').first.fill(char)
+            await search_page.locator('input.submit_main[type="submit"]').first.click()
+
+            # aタグのテキストを取得
+            links = search_page.locator("p.main a")
+            await links.first.wait_for(state="visible")
+            words = await links.all_inner_texts()
+
+            search_results = self.solver.find_words_by_first_char(words=words, char=char)
+
+            if len(search_results) == 0:
+                continue
+
+            for search_result in search_results:
+                found_char = []
+                found_char.append(char)
+                for w in list(search_result[1:]):
+                    if w in available:
+                        found_char.append(w)
+
+                if len(found_char) >= 3:
+                    await search_page.close()
+                    return found_char
+
+        await search_page.close()
+
+        return None
 
     async def _retry(self) -> bool:
         retry_locator = self.page.locator("#retry")

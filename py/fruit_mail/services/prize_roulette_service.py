@@ -22,7 +22,12 @@ class PrizeRouletteService(BaseGameService):
             print("======== プレゼントルーレット終了 ========")
             return
 
-        await self.page.locator('button[type="submit"]').click()
+        start_button = self.page.get_by_role(
+            "button",
+            name="スタート"
+        )
+        await start_button.wait_for(state="visible")
+        await start_button.click()
 
         while True:
             try:
@@ -30,7 +35,11 @@ class PrizeRouletteService(BaseGameService):
                 # 終了判定
                 #
                 if await self.roulette_page.is_finished():
-                    print("======== プレゼントルーレット終了 ========")
+                    await self.roulette_page.click_apply_button()
+                    await self.roulette_page.click_confirm_button()
+                    await self.roulette_page.click_confirm_button()
+                    await self.roulette_page.click_apply_button()
+                    await self.roulette_page.click_final_apply_button()
                     break
 
                 #
@@ -54,13 +63,8 @@ class PrizeRouletteService(BaseGameService):
 
             except Exception as e:
                 print(f"PrizeRouletteService Error: {e}")
+                await self.roulette_page.close_ad()
 
             await asyncio.sleep(5)
-
-        await self.roulette_page.click_apply_button()
-        await self.roulette_page.click_confirm_button()
-        await self.roulette_page.click_confirm_button()
-        await self.roulette_page.click_apply_button()
-        await self.roulette_page.click_final_apply_button()
 
         print("======== プレゼントルーレット終了 ========")

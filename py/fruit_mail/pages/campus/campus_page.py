@@ -56,6 +56,7 @@ class CampusPage(BasePage):
             "link",
             name="もう一度プレイする"
         )
+        # 広告が邪魔で消せないとループするので強制クリックとする
         await link.click(force=True)
 
     async def click_restart_again(self):

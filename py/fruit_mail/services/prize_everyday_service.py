@@ -47,7 +47,8 @@ class PrizeEverydayService(BaseGameService):
                 await self.prize_page.click_confirm_button()
 
                 await self.prize_page.click_final_apply_button()
+
             except Exception as e:
-                await self.prize_page.ad_killer.kill_ad()
+                await self.prize_page.close_ad()
 
         print("======== 応募完了 ========")

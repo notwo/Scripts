@@ -1,10 +1,24 @@
+import asyncio
+
 from pages.base_page import BasePage
 
 # プレイして応募する
 class BingoPage(BasePage):
 
     def __init__(self, page):
-        self.page = page
+        super().__init__(page=page)
+
+    async def finished(self):
+        """
+        最初の「応募する」があるかどうか
+        """
+        await asyncio.sleep(3)
+        await self.close_ad()
+        link = self.page.get_by_role(
+            "link",
+            name="応募する"
+        )
+        return not await link.is_visible()
 
     async def entry(self):
         """

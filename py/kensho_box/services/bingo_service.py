@@ -18,6 +18,10 @@ class BingoService(BaseGameService):
     async def play(self):
         print("======== ビンゴ開始 ========")
 
+        if await self.bingo_page.finished():
+            print("======== ビンゴ終了 ========")
+            return
+
         while True:
             try:
                 result = await self._run()
@@ -25,7 +29,7 @@ class BingoService(BaseGameService):
                     break
 
             except Exception as e:
-                await self.ad_killer.kill_ad()
+                await self.bingo_page.close_ad()
 
         print("======== ビンゴ終了 ========")
 

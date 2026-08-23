@@ -15,16 +15,21 @@ class PrizeEverydayService(BaseGameService):
     async def play(self):
         print("======== 本日の日替わり懸賞開始 ========")
 
-        if await self.prize_page.finished():
-            print("======== 応募済み ========")
-            return
+        while True:
+            try:
+                if await self.prize_page.finished():
+                    print("======== 応募済み ========")
+                    break
 
-        await self.prize_page.click_apply_button()
+                await self.prize_page.click_apply_button()
 
-        await self.prize_page.click_confirm_button()
+                await self.prize_page.click_confirm_button()
 
-        await self.prize_page.click_confirm_button()
+                await self.prize_page.click_confirm_button()
 
-        await self.prize_page.click_final_apply_button()
+                await self.prize_page.click_final_apply_button()
+
+            except Exception as e:
+                self.prize_page.close_ad()
 
         print("======== 応募完了 ========")

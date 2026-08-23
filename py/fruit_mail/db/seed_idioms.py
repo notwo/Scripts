@@ -2,7 +2,7 @@
 既知の三字熟語をあらかじめDBに登録するスクリプト。
 
 使い方:
-    python3 seed_idioms.py
+    python seed_idioms.py
 
 SEED_WORDS に登録したい熟語（3文字）を追加してから実行してください。
 config/setting.yml の campus.db.path で指定されたDBファイルに登録されます。

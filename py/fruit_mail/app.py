@@ -16,7 +16,7 @@ from services.prize_roulette_service import PrizeRouletteService
 from services.game_top_service import GameTopService
 
 
-def game_services(page):
+def game_services(page, context):
     services = []
 
     if setting.game.bingo:
@@ -32,7 +32,7 @@ def game_services(page):
     if setting.game.prize_roulette:
         services.append(PrizeRouletteService(page, setting))
     if setting.game.top:
-        services.append(GameTopService(page, setting))
+        services.append(GameTopService(page, setting, context))
 
     return services
 
@@ -58,16 +58,20 @@ async def main():
             headless=setting.browser.headless
         )
 
-        page = await browser.new_page()
+        context = await browser.new_context()
+
+        page = await context.new_page()
 
         page.set_default_timeout(setting.browser.timeout)
 
         fruitmail = FruitmailService(
             login_service=LoginService(page, setting),
-            game_services=game_services(page),
+            game_services=game_services(page, context),
             routine_services=routine_services(page)
         )
         await fruitmail.execute()
+
+        await context.close()
 
         await browser.close()
 

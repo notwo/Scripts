@@ -47,7 +47,6 @@ class PrizePresentSlotService(BaseGameService):
                     await self.slot_page.click_button(selector)
 
             except Exception as e:
-                print(f"エラー: {e}")
                 await self.slot_page.close_ad()
 
             await asyncio.sleep(5)

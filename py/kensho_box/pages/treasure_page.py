@@ -9,15 +9,15 @@ class TreasurePage(BasePage):
 
     async def finished(self):
         """
-        最初の「応募済み」かどうか
+        最初の「応募する」があるかどうか
         """
         await asyncio.sleep(3)
         await self.close_ad()
         link = self.page.get_by_role(
             "link",
-            name="応募済み"
+            name="応募する"
         )
-        return await link.is_visible()
+        return not await link.is_visible()
 
     async def click_apply_button(self):
         """
@@ -72,4 +72,5 @@ class TreasurePage(BasePage):
             "button",
             name="承諾する"
         )
-        await button.click(force=True)
+        if await button.is_visible():
+            await button.click(force=True)
