@@ -10,6 +10,7 @@ site:
   prize_point_url: https://www.fruitmail.net/prize/point/
   prize_gorgeous_url: https://www.fruitmail.net/prize/gorgeous/
   daily_ad_click_url: https://www.fruitmail.net/clickpoint/daily
+  hidden_point_url: https://moni.fruitmail.net/hidden_point/?p-1/
   prize_present_slot_url: https://slot.fruitmail.net/present_slot/
   prize_roulette_url: https://www.fruitmail.net/prize/roulette/
 
@@ -60,3 +61,4 @@ routine:
   prize_point: True
   prize_gorgeous: True
   daily_ad_click: True
+  hidden_point: True
