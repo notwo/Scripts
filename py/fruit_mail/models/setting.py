@@ -8,6 +8,7 @@ class SiteSetting:
     campus_url: str
     bingo_url: str
     scratch_url: str
+    hidden_point_url: str
     rank_gacha_url: str
     chirashi_url: str
     prize_everyday_url: str
@@ -46,6 +47,7 @@ class OtherRoutineSetting:
     prize_point: bool
     prize_gorgeous: bool
     daily_ad_click: bool
+    hidden_point: bool
 
 
 @dataclass(frozen=True)

@@ -1,28 +1,31 @@
-from pages.scratch_page import ScratchPage
+import asyncio
+
+from pages.hidden_point_page import HiddenPointPage
 from services.base_game_service import BaseGameService
 
 
-class ScratchService(BaseGameService):
+class HiddenPointService(BaseGameService):
 
     def __init__(self, page, setting):
         super().__init__(page, setting)
-        self.scratch_page = ScratchPage(page)
+        self.hidden_point_page = HiddenPointPage(page)
 
     @property
     def url(self):
-        return self.setting.site.scratch_url
+        return self.setting.site.hidden_point_url
 
     async def play(self):
         await self.click_links()
-        await self.click_images()
 
     async def click_links(self):
-        print("======== スクラッチ開始 ========")
+        print("======== 隠しポイント開始 ========")
 
-        count = await self.scratch_page.scratch_link_count()
+        count = await self.hidden_point_page.hidden_point_link_count()
 
         for i in range(count):
-            link = self.scratch_page.scratch_link(i)
+            await asyncio.sleep(2)
+
+            link = self.hidden_point_page.hidden_point_link(i)
 
             if not await link.is_visible():
                 continue
@@ -54,13 +57,4 @@ class ScratchService(BaseGameService):
                 except:
                     pass
 
-        print("======== スクラッチ終了 ========")
-
-        async def click_images(self):
-            count = await self.scratch_page.scratch_image_count()
-
-            for i in range(count):
-                image = self.scratch_page.scratch_image(i)
-
-                if await image.is_visible():
-                    await image.click()
+        print("======== 隠しポイント終了 ========")

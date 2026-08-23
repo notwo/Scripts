@@ -14,6 +14,7 @@ from services.prize_present_slot_service import PrizePresentSlotService
 from services.scratch_service import ScratchService
 from services.prize_roulette_service import PrizeRouletteService
 from services.game_top_service import GameTopService
+from services.hidden_point_service import HiddenPointService
 
 
 def game_services(page, context):
@@ -48,6 +49,8 @@ def routine_services(page):
         services.append(PrizeGorgeousService(page, setting))
     if setting.routine.daily_ad_click:
         services.append(DailyAdClickService(page, setting))
+    if setting.routine.hidden_point:
+        services.append(HiddenPointService(page, setting))
 
     return services
 
