@@ -56,11 +56,11 @@ class ScratchService(BaseGameService):
 
         print("======== スクラッチ終了 ========")
 
-        async def click_images(self):
-            count = await self.scratch_page.scratch_image_count()
+    async def click_images(self):
+        count = await self.scratch_page.scratch_image_count()
 
-            for i in range(count):
-                image = self.scratch_page.scratch_image(i)
+        for i in range(count):
+            image = self.scratch_page.scratch_image(i)
 
-                if await image.is_visible():
-                    await image.click()
+            if await image.is_visible():
+                await image.click()

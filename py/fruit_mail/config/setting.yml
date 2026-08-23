@@ -54,7 +54,7 @@ campus:
       filepath: ./db/campus.db
   medal:
     medal_off_marker: medal_icon_off.png
-    active: True
+    active: False
 
 routine:
   prize_everyday: True
