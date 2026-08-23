@@ -56,8 +56,6 @@ class SanjiService():
         print("======== 三字熟語ゲーム終了 ========")
 
     async def _run(self):
-        await self.sanji_page.click_restart_again()
-
         items = self.page.locator(".sanjiSelect")
         if await items.count() == 0:
             return
@@ -83,7 +81,7 @@ class SanjiService():
             if await self._try_combo(db_combo):
                 print(f"  → 正解！（DB検索）")
                 return
-            print("  → DBのデータと実際の正解が一致しませんでした。ブルートフォースに切り替えます。")
+            print("  → DBのデータと実際の正解が一致しませんでした。外部サイトアクセスに切り替えます。")
 
         # 2. 別サイトで検索
         search_result = await self._search_by_external_site(available=available)
@@ -91,9 +89,9 @@ class SanjiService():
             if await self._try_combo(search_result):
                 word = "".join(search_result)
                 self._repo.add(word)
-                print(f"  → 正解！（ブルートフォース {tried}回目）DBに登録: {word}")
+                print(f"  → 正解！ DBに登録: {word}")
                 return
-            return
+            print("  → DBのデータと実際の正解が一致しませんでした。ブルートフォースに切り替えます。")
 
         # 3. ブルートフォース フォールバック
         tried = 0
@@ -116,16 +114,14 @@ class SanjiService():
         await search_page.goto("https://kanji.reader.bz/jukugo_3moji/")
 
         for char in available:
-
+            await search_page.locator('input.input_main').first.fill(char)
             await search_page.locator('input.submit_main[type="submit"]').first.click()
 
             # aタグのテキストを取得
             links = search_page.locator("p.main a")
-            print(links)
+            await links.first.wait_for(state="visible")
             words = await links.all_inner_texts()
 
-            print(words)
-            print(char)
             search_results = self.solver.find_words_by_first_char(words=words, char=char)
 
             if len(search_results) == 0:

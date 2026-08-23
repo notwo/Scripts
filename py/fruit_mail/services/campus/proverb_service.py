@@ -55,6 +55,10 @@ class ProverbService():
         print("======== ことわざクイズ終了 ========")
 
     async def _run(self):
+        items = self.page.locator(".proverbSelect")
+        if await items.count() == 0:
+            return
+
         """3組のことわざを完了させ、最後に clear をクリックする"""
         for attempt in range(1, self._max_combo_attempts + 1):
             print(f"--- ことわざ {attempt}/{self._max_combo_attempts} 組目 ---")

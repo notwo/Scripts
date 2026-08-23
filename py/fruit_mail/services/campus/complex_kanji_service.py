@@ -55,6 +55,10 @@ class ComplexKanjiService():
         print("======== 難読漢字終了 ========")
 
     async def _run(self):
+        items = self.page.locator(".dkanjiSelect")
+        if await items.count() == 0:
+            return
+
         """3組の漢字を完了させ、最後に clear をクリックする"""
         for attempt in range(1, self._max_combo_attempts + 1):
             print(f"--- 漢字 {attempt}/{self._max_combo_attempts} 組目 ---")
