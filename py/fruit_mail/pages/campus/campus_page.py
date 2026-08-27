@@ -12,6 +12,8 @@ class CampusPage(BasePage):
         await self._click_clear()
         # モーダルが出たら閉じる
         await self._close_modal()
+        # リロード
+        await self.page.reload(wait_until="domcontentloaded")
         # 「もう一度プレイする」があればクリック
         await self._click_restart()
 
@@ -46,8 +48,10 @@ class CampusPage(BasePage):
 
     async def _click_restart(self):
         # ゲーム実施中であれば何もしない
-        button = self.page.locator("#check")
-        if await button.is_visible():
+        check = self.page.locator("#check")
+        next = self.page.locator("#next")
+        clear = self.page.locator("#clear")
+        if await check.is_visible() or await next.is_visible() or await clear.is_visible():
             return
 
         await asyncio.sleep(5)

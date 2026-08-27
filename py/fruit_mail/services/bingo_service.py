@@ -13,30 +13,36 @@ class BingoService(BaseGameService):
         return self.setting.site.bingo_url
 
     async def play(self):
-        print("======== ビンゴ開始 ========")
+        while True:
+            try:
+                print("======== ビンゴ開始 ========")
 
-        await self.click_start()
+                await self.click_start()
 
-        count = await self.bingo_page.before_select_count()
+                count = await self.bingo_page.before_select_count()
+                if count == 0:
+                    break
 
-        click_count = min(
-            self.setting.bingo.max_click,
-            count,
-        )
+                click_count = min(
+                    self.setting.bingo.max_click,
+                    count,
+                )
 
-        for _ in range(click_count):
-            await self.bingo_page.click_first_before_select()
+                for _ in range(click_count):
+                    await self.bingo_page.click_first_before_select()
 
-            await self.page.wait_for_function(
-                """
-                count => document.querySelectorAll(
-                    'input.before_select'
-                ).length < count
-                """,
-                arg=count,
-            )
+                    await self.page.wait_for_function(
+                        """
+                        count => document.querySelectorAll(
+                            'input.before_select'
+                        ).length < count
+                        """,
+                        arg=count,
+                    )
 
-            count -= 1
+                    count -= 1
+            except Exception as e:
+                await self.bingo_page.close_ad()
 
         print("======== ビンゴ終了 ========")
 

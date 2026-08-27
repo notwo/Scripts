@@ -31,6 +31,6 @@ class TreasureService(BaseGameService):
 
                 await self.treasure_page.click_final_apply_button()
             except Exception as e:
-                self.treasure_page.close_ad()
+                await self.treasure_page.close_ad()
 
         print("======== ポイント懸賞終了 ========")

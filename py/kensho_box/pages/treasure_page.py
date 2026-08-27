@@ -72,5 +72,5 @@ class TreasurePage(BasePage):
             "button",
             name="承諾する"
         )
-        if await button.is_visible():
-            await button.click(force=True)
+        #if await button.is_visible():
+        await button.click(force=True)
