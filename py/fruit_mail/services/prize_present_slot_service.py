@@ -63,7 +63,7 @@ class PrizePresentSlotService(BaseGameService):
                     await self.slot_page.click_button(selector)
                 else:
                     # 謎に実行中に画面が読み込み切れず止まることがあるのでリロードで対策
-                    self.page.reload()
+                    await self.page.reload()
 
             except Exception as e:
                 await self.slot_page.close_ad()
