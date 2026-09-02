@@ -84,14 +84,14 @@ class SanjiService():
             print("  → DBのデータと実際の正解が一致しませんでした。外部サイトアクセスに切り替えます。")
 
         # 2. 別サイトで検索
-        search_result = await self._search_by_external_site(available=available)
-        if search_result is not None:
-            if await self._try_combo(search_result):
-                word = "".join(search_result)
-                self._repo.add(word)
-                print(f"  → 正解！ DBに登録: {word}")
-                return
-            print("  → DBのデータと実際の正解が一致しませんでした。ブルートフォースに切り替えます。")
+        #search_result = await self._search_by_external_site(available=available)
+        #if search_result is not None:
+        #    if await self._try_combo(search_result):
+        #        word = "".join(search_result)
+        #        self._repo.add(word)
+        #        print(f"  → 正解！ DBに登録: {word}")
+        #        return
+        #    print("  → DBのデータと実際の正解が一致しませんでした。ブルートフォースに切り替えます。")
 
         # 3. ブルートフォース フォールバック
         tried = 0

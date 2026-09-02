@@ -49,6 +49,6 @@ class PrizeGorgeousService(BaseGameService):
                 await self.prize_page.click_final_apply_button()
 
             except Exception as e:
-                self.prize_page.close_ad()
+                await self.prize_page.close_ad()
 
         print("======== 豪華懸賞終了 ========")
