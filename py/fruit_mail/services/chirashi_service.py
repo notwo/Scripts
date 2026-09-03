@@ -7,6 +7,7 @@ class ChirashiService(BaseGameService):
     def __init__(self, page, setting):
         super().__init__(page, setting)
         self.chirashi_page = ChirashiPage(page)
+        self.clicked = False
 
     @property
     def url(self) -> str:
@@ -15,8 +16,17 @@ class ChirashiService(BaseGameService):
     async def play(self):
         print("======== チラシクリック開始 ========")
 
-        await self.chirashi_page.search_by_zipcode()
+        while True:
+            try:
+                if self.clicked:
+                    break
 
-        await self.chirashi_page.click_button()
+                if not await self.chirashi_page.search_by_zipcode():
+                    continue
+
+                self.clicked = await self.chirashi_page.click_button()
+
+            except Exception as e:
+                await self.chirashi_page.close_ad()
 
         print("======== チラシクリック終了 ========")

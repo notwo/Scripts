@@ -7,25 +7,27 @@ class ChirashiPage(BasePage):
     def __init__(self, page):
         super().__init__(page)
 
-    async def search_by_zipcode(self):
+    async def search_by_zipcode(self) -> bool:
         """
         郵便番号入力
         """
         zipcode_input = self.page.locator("#chirashi_zipcodeInput")
         if not await zipcode_input.is_visible():
-            return
+            return False
 
         zipcode = os.getenv("ZIPCODE")
         if not zipcode or not zipcode:
             print("郵便番号をハイフンなしで設定してください: ZIPCODE")
-            return
+            return False
         await zipcode_input.fill(zipcode)
 
         zipcode_button = self.page.locator("#chirashi_zipcodeButton")
         if await zipcode_button.is_visible():
             await zipcode_button.click()
 
-    async def click_button(self):
+        return True
+
+    async def click_button(self) -> bool:
         """
         チラシをクリック
         """
@@ -37,3 +39,5 @@ class ChirashiPage(BasePage):
 
             # 新しいタブを閉じる
             await popup.close()
+
+        return True

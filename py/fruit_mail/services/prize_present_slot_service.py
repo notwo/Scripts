@@ -1,4 +1,6 @@
 import asyncio
+import re
+from datetime import datetime, timedelta
 
 from pages.prize_present_slot_page import PrizePresentSlotPage
 from services.base_game_service import BaseGameService
@@ -30,7 +32,21 @@ class PrizePresentSlotService(BaseGameService):
                     m = await countdown.locator("#m").inner_text()
                     s = await countdown.locator("#s").inner_text()
 
-                    print(f"次回開始まで残り {h}:{m}:{s}")
+                    text = f"{h}:{m}:{s}"
+
+                    match = re.search(r'(\d{2}):(\d{2}):(\d{2})', text)
+
+                    hours, minutes, seconds = map(int, match.groups())
+
+                    now = datetime.now()
+
+                    target_time = now + timedelta(
+                        hours=hours,
+                        minutes=minutes,
+                        seconds=seconds
+                    )
+
+                    print(f'次回実行可能時刻: {target_time.strftime("%H:%M:%S")}')
                     break
 
                 if await self.slot_page.close_ad():
@@ -45,6 +61,9 @@ class PrizePresentSlotService(BaseGameService):
                     print(f"{name} をクリック")
 
                     await self.slot_page.click_button(selector)
+                else:
+                    # 謎に実行中に画面が読み込み切れず止まることがあるのでリロードで対策
+                    await self.page.reload()
 
             except Exception as e:
                 await self.slot_page.close_ad()

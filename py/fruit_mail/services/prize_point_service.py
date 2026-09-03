@@ -49,6 +49,6 @@ class PrizePointService(BaseGameService):
                 await self.prize_page.click_final_apply_button()
 
             except Exception as e:
-                self.prize_page.close_ad()
+                await self.prize_page.close_ad()
 
         print("======== ポイント懸賞終了 ========")

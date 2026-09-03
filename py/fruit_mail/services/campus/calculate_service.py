@@ -39,15 +39,22 @@ class CalculateService():
         await asyncio.sleep(2)
 
         items = self.page.locator(".shisokuenzanSelect")
+        if await items.count() == 0:
+            return
+
         numbers = await self.page.locator(".shisokuenzanUserAnswer__number").all()
-        last_number = await self.page.locator(".shisokuenzanUserAnswer__solve").first.inner_text()
+        last_number = await self.page.locator(".shisokuenzanUserAnswer__solve")
+        if not await last_number.is_visible():
+            return
+
+        last_number_text = last_number.first.inner_text()
 
         number_values = []
 
         for number in numbers:
             value = await number.inner_text()
             number_values.append(int(value))
-        number_values.append(int(last_number))
+        number_values.append(int(last_number_text))
 
         correct_signs = self.solver.find_operators(*number_values)
 
