@@ -58,5 +58,5 @@ class DailyAdClickService(BaseGameService):
             except Exception as e:
                 await self.ad_page.close_ad()
 
-    print("======== 毎日ポイント終了 ========")
+        print("======== 毎日ポイント終了 ========")
 
