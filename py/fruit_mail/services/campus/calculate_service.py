@@ -43,11 +43,11 @@ class CalculateService():
             return
 
         numbers = await self.page.locator(".shisokuenzanUserAnswer__number").all()
-        last_number = await self.page.locator(".shisokuenzanUserAnswer__solve")
-        if not await last_number.is_visible():
+        last_numbers = self.page.locator(".shisokuenzanUserAnswer__solve")
+        if not await last_numbers.first.is_visible():
             return
 
-        last_number_text = last_number.first.inner_text()
+        last_number_text = await last_numbers.first.inner_text()
 
         number_values = []
 
