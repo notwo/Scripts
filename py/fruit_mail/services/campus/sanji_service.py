@@ -81,17 +81,18 @@ class SanjiService():
             if await self._try_combo(db_combo):
                 print(f"  → 正解！（DB検索）")
                 return
-            print("  → DBのデータと実際の正解が一致しませんでした。外部サイトアクセスに切り替えます。")
+            #print("  → DBのデータと実際の正解が一致しませんでした。外部サイトアクセスに切り替えます。")
+            print("  → DBのデータと実際の正解が一致しませんでした。ブルートフォースに切り替えます。")
 
         # 2. 別サイトで検索
-        #search_result = await self._search_by_external_site(available=available)
-        #if search_result is not None:
-        #    if await self._try_combo(search_result):
-        #        word = "".join(search_result)
-        #        self._repo.add(word)
-        #        print(f"  → 正解！ DBに登録: {word}")
-        #        return
-        #    print("  → DBのデータと実際の正解が一致しませんでした。ブルートフォースに切り替えます。")
+        search_result = await self._search_by_external_site(available=available)
+        if search_result is not None:
+            if await self._try_combo(search_result):
+                word = "".join(search_result)
+                self._repo.add(word)
+                print(f"  → 正解！ DBに登録: {word}")
+                return
+            print("  → アクセス先の熟語と実際の正解が一致しませんでした。ブルートフォースに切り替えます。")
 
         # 3. ブルートフォース フォールバック
         tried = 0
@@ -111,7 +112,10 @@ class SanjiService():
     async def _search_by_external_site(self, available: list[str]):
         search_page = await self.context.new_page()
 
-        await search_page.goto("https://kanji.reader.bz/jukugo_3moji/")
+        await search_page.set_extra_http_headers({
+            "Referer": "https://www.google.com/"
+        })
+        await search_page.goto("https://kanji.reader.bz/jukugo_3moji/", wait_until="domcontentloaded")
 
         for char in available:
             await search_page.locator('input.input_main').first.fill(char)
