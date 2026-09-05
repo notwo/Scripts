@@ -1,3 +1,4 @@
+import asyncio
 from pages.scratch_page import ScratchPage
 from services.base_game_service import BaseGameService
 
@@ -13,12 +14,13 @@ class ScratchService(BaseGameService):
         return self.setting.site.scratch_url
 
     async def play(self):
-        await self.click_links()
-        await self.click_images()
-
-    async def click_links(self):
         print("======== スクラッチ開始 ========")
 
+        await self.click_links()
+
+        print("======== スクラッチ終了 ========")
+
+    async def click_links(self):
         count = await self.scratch_page.scratch_link_count()
 
         for i in range(count):
@@ -37,30 +39,28 @@ class ScratchService(BaseGameService):
                 new_page = self.page.context.pages[-1]
 
                 try:
-                    await new_page.wait_for_load_state("domcontentloaded", timeout=5000)
+                    await new_page.wait_for_load_state("domcontentloaded")
                 finally:
                     await new_page.close()
 
+                    await self.click_images(i)
             else:
                 try:
-                    await self.page.wait_for_load_state("domcontentloaded", timeout=5000)
+                    await self.page.wait_for_load_state("domcontentloaded")
                 except:
                     pass
+
+                await self.click_images(i)
 
                 await self.page.go_back()
 
                 try:
-                    await self.page.wait_for_load_state("domcontentloaded", timeout=5000)
+                    await self.page.wait_for_load_state("domcontentloaded")
                 except:
                     pass
 
-        print("======== スクラッチ終了 ========")
+    async def click_images(self, index: int):
+        image = self.scratch_page.scratch_image(index)
 
-    async def click_images(self):
-        count = await self.scratch_page.scratch_image_count()
-
-        for i in range(count):
-            image = self.scratch_page.scratch_image(i)
-
-            if await image.is_visible():
-                await image.click()
+        if await image.is_visible():
+            await image.click()
