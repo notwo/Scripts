@@ -31,9 +31,9 @@ class GameTopService(BaseGameService):
         await self.top_page.click_game_link(gamename="四則演算記号ゲーム")
         try:
             await self.ad_killer.kill_ad()
-            await self.page.wait_for_load_state("domcontentloaded", timeout=5000)
+            await self.page.wait_for_load_state("domcontentloaded")
         finally:
-            await self.page.locator("#start_game").click(timeout=5000)
+            await self.page.locator("#start_game").click()
             await self.top_page.click_game_start_dialog()
             # ここがゲーム本体
             calculate_service = CalculateService(self.page, self.setting)
@@ -43,9 +43,9 @@ class GameTopService(BaseGameService):
         await self.top_page.click_game_link(gamename="計算ゲーム")
         try:
             await self.ad_killer.kill_ad()
-            await self.page.wait_for_load_state("domcontentloaded", timeout=5000)
+            await self.page.wait_for_load_state("domcontentloaded")
         finally:
-            await self.page.locator("#start_game").click(timeout=5000)
+            await self.page.locator("#start_game").click()
             await self.top_page.click_game_start_dialog()
             # ここがゲーム本体
             arithmetic_service = ArithmeticService(self.page, self.setting)
@@ -55,9 +55,9 @@ class GameTopService(BaseGameService):
         await self.top_page.click_game_link(gamename="バランスクイズ")
         try:
             await self.ad_killer.kill_ad()
-            await self.page.wait_for_load_state("domcontentloaded", timeout=5000)
+            await self.page.wait_for_load_state("domcontentloaded")
         finally:
-            await self.page.locator("#start_game").click(timeout=5000)
+            await self.page.locator("#start_game").click()
             await self.top_page.click_game_start_dialog()
             # ここがゲーム本体
             balance_service = BalanceService(self.page, self.setting)
@@ -68,9 +68,9 @@ class GameTopService(BaseGameService):
             await self.top_page.click_game_link(gamename="ことわざクイズ")
             try:
                 await self.ad_killer.kill_ad()
-                await self.page.wait_for_load_state("domcontentloaded", timeout=5000)
+                await self.page.wait_for_load_state("domcontentloaded")
             finally:
-                await self.page.locator("#start_game").click(timeout=5000)
+                await self.page.locator("#start_game").click()
                 await self.top_page.click_game_start_dialog()
                 # ここがゲーム本体
                 proverb_service = ProverbService(self.page, repo, self.setting)
@@ -81,9 +81,9 @@ class GameTopService(BaseGameService):
             await self.top_page.click_game_link(gamename="難読漢字")
             try:
                 await self.ad_killer.kill_ad()
-                await self.page.wait_for_load_state("domcontentloaded", timeout=5000)
+                await self.page.wait_for_load_state("domcontentloaded")
             finally:
-                await self.page.locator("#start_game").click(timeout=5000)
+                await self.page.locator("#start_game").click()
                 await self.top_page.click_game_start_dialog()
                 # ここがゲーム本体
                 complex_kanji_service = ComplexKanjiService(self.page, repo, self.setting)
@@ -94,9 +94,9 @@ class GameTopService(BaseGameService):
             await self.top_page.click_game_link(gamename="三字熟語ゲーム")
             try:
                 await self.ad_killer.kill_ad()
-                await self.page.wait_for_load_state("domcontentloaded", timeout=5000)
+                await self.page.wait_for_load_state("domcontentloaded")
             finally:
-                await self.page.locator("#start_game").click(timeout=5000)
+                await self.page.locator("#start_game").click()
                 await self.top_page.click_game_start_dialog()
                 # ここがゲーム本体
                 sanji_service = SanjiService(self.page, repo, self.setting, self.context)
