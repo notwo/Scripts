@@ -3,8 +3,8 @@ from pages.base_page import BasePage
 
 class ScratchPage(BasePage):
 
-    def __init__(self, page):
-        super().__init__(page)
+    def __init__(self, page, setting):
+        super().__init__(page, setting=setting)
 
     async def scratch_link_count(self):
         return await self.page.locator(".scratch_link").count()

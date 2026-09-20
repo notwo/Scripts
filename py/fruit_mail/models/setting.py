@@ -4,6 +4,7 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class SiteSetting:
     login_url: str
+    allowed_domain: str
     game_top_url: str
     campus_url: str
     bingo_url: str

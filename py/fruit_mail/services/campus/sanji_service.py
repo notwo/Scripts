@@ -25,7 +25,7 @@ class SanjiService():
 
     def __init__(self, page, repo, setting, context):
         self.page = page
-        self.sanji_page = SanjiPage(page)
+        self.sanji_page = SanjiPage(page,setting)
         self.solver = SanjiSolver()
         self.medal_service = MedalService(page=page,setting=setting)
         self._repo = repo
@@ -35,6 +35,17 @@ class SanjiService():
 
     async def game_start(self):
         print("======== 三字熟語ゲーム開始 ========")
+
+        dialog = self.page.get_by_role(
+            "link",
+            name="ゲームを開始する"
+        )
+        if await dialog.is_visible():
+            await dialog.click()
+
+        start_game = self.page.locator("#start_game")
+        if await start_game.is_visible():
+            await start_game.click()
 
         while True:
             try:
@@ -83,6 +94,7 @@ class SanjiService():
                 return
             #print("  → DBのデータと実際の正解が一致しませんでした。外部サイトアクセスに切り替えます。")
             print("  → DBのデータと実際の正解が一致しませんでした。ブルートフォースに切り替えます。")
+            self._repo.remove(db_combo)
 
         # 2. 別サイトで検索
         #search_result = await self._search_by_external_site(available=available)

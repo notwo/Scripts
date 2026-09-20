@@ -15,7 +15,7 @@ def routine_services(page):
         services.append(PrizeEverydayService(page, setting))
     if setting.routine.treasure:
         services.append(TreasureService(page, setting))
-    if setting.bingo:
+    if setting.routine.bingo:
         services.append(BingoService(page, setting))
 
     return services

@@ -11,7 +11,7 @@ class PrizePresentSlotService(BaseGameService):
     def __init__(self, page, setting):
         super().__init__(page, setting)
         self.page = page
-        self.slot_page = PrizePresentSlotPage(page)
+        self.slot_page = PrizePresentSlotPage(page, setting)
 
     @property
     def url(self) -> str:
@@ -53,6 +53,8 @@ class PrizePresentSlotService(BaseGameService):
                     await asyncio.sleep(1)
                     continue
 
+                await self._delete_ins()
+
                 button = await self.slot_page.visible_button()
 
                 if button:
@@ -71,3 +73,22 @@ class PrizePresentSlotService(BaseGameService):
             await asyncio.sleep(5)
 
         print("======== プレゼントスロット終了 ========")
+
+    async def _delete_ins(self):
+        # 念のため2種類試す
+        await self.page.evaluate("""
+            () => {
+                document.querySelectorAll('div[id^="im-"]').forEach(el => {
+                    el.remove();
+                });
+            }
+            """)
+        await self.page.evaluate("""
+            () => {
+                document.querySelectorAll('div[id^="im-"]').forEach(el => {
+                    if (el.querySelector('iframe')) {
+                        el.remove();
+                    }
+                });
+            }
+            """)

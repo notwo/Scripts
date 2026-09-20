@@ -7,7 +7,7 @@ class ScratchService(BaseGameService):
 
     def __init__(self, page, setting):
         super().__init__(page, setting)
-        self.scratch_page = ScratchPage(page)
+        self.scratch_page = ScratchPage(page, setting)
 
     @property
     def url(self):

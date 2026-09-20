@@ -14,7 +14,7 @@ class MedalService:
 
     def __init__(self, page: Page, setting):
         self.page = page
-        self.ad_killer = AdKiller(page=page)
+        self.ad_killer = AdKiller(page=page, setting=setting)
         self._off_marker = setting.campus.medal["medal_off_marker"]
         self._active = setting.campus.medal["active"]
 

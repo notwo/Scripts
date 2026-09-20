@@ -53,6 +53,12 @@ class IdiomRepository:
         )
         self._conn.commit()
 
+    def remove(self, word: str) -> bool:
+        self._conn.execute(
+            "DELETE FROM idioms WHERE word = ?",
+            (word,),
+        )
+
     def exists(self, word: str) -> bool:
         row = self._conn.execute(
             "SELECT 1 FROM idioms WHERE word = ? LIMIT 1",

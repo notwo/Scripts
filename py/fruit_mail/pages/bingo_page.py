@@ -3,8 +3,8 @@ from pages.base_page import BasePage
 
 class BingoPage(BasePage):
 
-    def __init__(self, page):
-        super().__init__(page)
+    def __init__(self, page, setting):
+        super().__init__(page, setting=setting)
 
     async def has_start_button(self):
         return await self.page.locator("#bingo_start").is_visible()

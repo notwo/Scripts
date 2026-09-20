@@ -1,13 +1,23 @@
-"""メダルクリック（未クリックのメダルを開いてタブを閉じる）サービス"""
+from urllib.parse import urlparse
 from playwright.async_api import Page
 
 
 class AdKiller:
-    def __init__(self, page: Page):
+    def __init__(self, page: Page, setting):
         self.page = page
+        self.setting = setting
+
+    def _invalid_domain(self) -> bool:
+        current_url = self.page.url
+        domain = urlparse(current_url).netloc
+        return domain not in self.setting.site.allowed_domain
 
     async def kill_ad(self) -> None:
-        # ゴミ広告が出たら閉じる
+        # 別サイトに富んでたら戻る
+        if self._invalid_domain():
+            await self.page.go_back()
+
+        # iframe対策
         for frame in list(self.page.frames):
             try:
                 close = frame.locator("#close-banner-ad-interstitial")
@@ -71,3 +81,17 @@ class AdKiller:
 
         except Exception as e:
             print(f"通常広告を閉じられませんでした: {type(e).__name__}")
+
+        await self._delete_google_ad()
+
+    async def _delete_google_ad(self):
+        ad = self.page.locator(
+            "ins.adsbygoogle.adsbygoogle-noablate"
+            "[data-anchor-status='displayed']"
+        )
+        count = await ad.count()
+        if count > 0:
+            await ad.evaluate_all(
+                "elements => elements.forEach(element => element.remove())"
+            )
+            print(f"AdSense固定広告を削除: {count}件")

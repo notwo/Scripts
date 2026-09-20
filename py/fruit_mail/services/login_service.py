@@ -7,7 +7,7 @@ class LoginService:
 
     def __init__(self, page, setting):
         self.page = page
-        self.login_page = LoginPage(page)
+        self.login_page = LoginPage(page, setting)
         self.setting = setting
 
     async def login(self, login_id, password):

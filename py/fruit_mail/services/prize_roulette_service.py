@@ -9,7 +9,7 @@ class PrizeRouletteService(BaseGameService):
     def __init__(self, page, setting):
         super().__init__(page, setting)
         self.page = page
-        self.roulette_page = PrizeRoulettePage(page)
+        self.roulette_page = PrizeRoulettePage(page, setting)
 
     @property
     def url(self) -> str:

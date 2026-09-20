@@ -6,7 +6,7 @@ class ChirashiService(BaseGameService):
 
     def __init__(self, page, setting):
         super().__init__(page, setting)
-        self.chirashi_page = ChirashiPage(page)
+        self.chirashi_page = ChirashiPage(page, setting)
         self.clicked = False
 
     @property

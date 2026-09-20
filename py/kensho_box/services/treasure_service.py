@@ -6,7 +6,7 @@ class TreasureService(BaseGameService):
 
     def __init__(self, page, setting):
         super().__init__(page, setting)
-        self.treasure_page = TreasurePage(page)
+        self.treasure_page = TreasurePage(page, setting)
 
     @property
     def url(self) -> str:
@@ -18,7 +18,6 @@ class TreasureService(BaseGameService):
         while True:
             try:
                 if await self.treasure_page.finished():
-                    print("======== 応募済み ========")
                     break
 
                 await self.treasure_page.click_apply_button()

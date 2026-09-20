@@ -4,8 +4,8 @@ from pages.base_page import BasePage
 
 
 class CampusPage(BasePage):
-    def __init__(self, page):
-        super().__init__(page)
+    def __init__(self, page, setting):
+        super().__init__(page, setting=setting)
 
     async def transfer_check(self):
         # スタンプGET
@@ -24,7 +24,7 @@ class CampusPage(BasePage):
     async def click_check(self):
         button = self.page.locator("#check")
         if await button.is_visible():
-            await button.click(timeout=1000)
+            await button.click()
 
     async def click_next(self):
         button = self.page.locator("#next")

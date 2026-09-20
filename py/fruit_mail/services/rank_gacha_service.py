@@ -6,7 +6,7 @@ class RankGachaService(BaseGameService):
 
     def __init__(self, page, setting):
         super().__init__(page, setting)
-        self.gacha_page = RankGachaPage(page)
+        self.gacha_page = RankGachaPage(page, setting)
 
     @property
     def url(self) -> str:

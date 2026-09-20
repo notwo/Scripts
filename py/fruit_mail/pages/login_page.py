@@ -3,8 +3,8 @@ from pages.base_page import BasePage
 
 class LoginPage(BasePage):
 
-    def __init__(self, page):
-        super().__init__(page)
+    def __init__(self, page, setting):
+        super().__init__(page, setting=setting)
 
     async def is_login_page(self):
         return await self.page.locator("#user_identifier").count() > 0

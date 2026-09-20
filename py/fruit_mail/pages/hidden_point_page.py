@@ -3,8 +3,8 @@ from pages.base_page import BasePage
 
 class HiddenPointPage(BasePage):
 
-    def __init__(self, page):
-        super().__init__(page)
+    def __init__(self, page, setting):
+        super().__init__(page, setting=setting)
 
     async def hidden_point_link_count(self):
         return await self.page.locator("div.hidden_clickItem__winningResult > a").count()

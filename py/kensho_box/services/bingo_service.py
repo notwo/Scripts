@@ -9,7 +9,6 @@ class BingoService(BaseGameService):
     def __init__(self, page, setting):
         super().__init__(page, setting)
         self.bingo_page = BingoPage(page)
-        self._bingo_count = 0
 
     @property
     def url(self) -> str:
@@ -17,6 +16,11 @@ class BingoService(BaseGameService):
 
     async def play(self):
         print("======== ビンゴ開始 ========")
+
+        if await self.bingo_page.cleared():
+            # TODO: 後で申し込みの部分自動化
+            print("ビンゴクリア")
+            return
 
         if await self.bingo_page.finished():
             print("======== ビンゴ終了 ========")
@@ -40,6 +44,7 @@ class BingoService(BaseGameService):
 
         await self.bingo_page.click_first_before_select()
 
-        self._bingo_count = self._bingo_count + 1
+        if await self.bingo_page.before_select_count() >= 4:
+            return False
 
         return True

@@ -3,9 +3,9 @@ from lib.ad_killer import AdKiller
 
 class BasePage:
 
-    def __init__(self, page):
+    def __init__(self, page, setting):
         self.page = page
-        self.ad_killer = AdKiller(page=page)
+        self.ad_killer = AdKiller(page=page, setting=setting)
 
     def wait_for_debug(self):
         self.page.wait_for_timeout(10000)

@@ -1,4 +1,5 @@
 site:
+  allowed_domain: kenshobox.net
   login_url: https://kenshobox.net/login
   prize_everyday_url: https://kenshobox.net/present/daily
   treasure_url: https://kenshobox.net/present/treasure

@@ -16,7 +16,7 @@ class GameTopService(BaseGameService):
 
     def __init__(self, page, setting, context):
         super().__init__(page, setting)
-        self.top_page = GameTopPage(page)
+        self.top_page = GameTopPage(page, setting)
         self.setting = setting
         self.context = context
 
@@ -30,11 +30,18 @@ class GameTopService(BaseGameService):
     async def _calculate(self):
         await self.top_page.click_game_link(gamename="四則演算記号ゲーム")
         try:
-            await self.ad_killer.kill_ad()
             await self.page.wait_for_load_state("domcontentloaded")
-        finally:
             await self.page.locator("#start_game").click()
+        except Exception as e:
+            await self.ad_killer.kill_ad()
+        finally:
             await self.top_page.click_game_start_dialog()
+
+            start_game = self.page.locator("#start_game")
+            if await start_game.is_visible():
+                await self.top_page.click_game_start_dialog()
+                await start_game.click()
+
             # ここがゲーム本体
             calculate_service = CalculateService(self.page, self.setting)
             await calculate_service.game_start()
@@ -42,11 +49,18 @@ class GameTopService(BaseGameService):
     async def _arithmetic(self):
         await self.top_page.click_game_link(gamename="計算ゲーム")
         try:
-            await self.ad_killer.kill_ad()
             await self.page.wait_for_load_state("domcontentloaded")
-        finally:
             await self.page.locator("#start_game").click()
+        except Exception as e:
+            await self.ad_killer.kill_ad()
+        finally:
             await self.top_page.click_game_start_dialog()
+
+            start_game = self.page.locator("#start_game")
+            if await start_game.is_visible():
+                await self.top_page.click_game_start_dialog()
+                await start_game.click()
+
             # ここがゲーム本体
             arithmetic_service = ArithmeticService(self.page, self.setting)
             await arithmetic_service.game_start()
@@ -54,11 +68,18 @@ class GameTopService(BaseGameService):
     async def _balance(self):
         await self.top_page.click_game_link(gamename="バランスクイズ")
         try:
-            await self.ad_killer.kill_ad()
             await self.page.wait_for_load_state("domcontentloaded")
-        finally:
             await self.page.locator("#start_game").click()
+        except Exception as e:
+            await self.ad_killer.kill_ad()
+        finally:
             await self.top_page.click_game_start_dialog()
+
+            start_game = self.page.locator("#start_game")
+            if await start_game.is_visible():
+                await self.top_page.click_game_start_dialog()
+                await start_game.click()
+
             # ここがゲーム本体
             balance_service = BalanceService(self.page, self.setting)
             await balance_service.game_start()
@@ -67,11 +88,18 @@ class GameTopService(BaseGameService):
         with ProverbRepository(self.setting.campus.proverb['db']['filepath']) as repo:
             await self.top_page.click_game_link(gamename="ことわざクイズ")
             try:
-                await self.ad_killer.kill_ad()
                 await self.page.wait_for_load_state("domcontentloaded")
-            finally:
                 await self.page.locator("#start_game").click()
+            except Exception as e:
+                await self.ad_killer.kill_ad()
+            finally:
                 await self.top_page.click_game_start_dialog()
+
+                start_game = self.page.locator("#start_game")
+                if await start_game.is_visible():
+                    await self.top_page.click_game_start_dialog()
+                    await start_game.click()
+
                 # ここがゲーム本体
                 proverb_service = ProverbService(self.page, repo, self.setting)
                 await proverb_service.game_start()
@@ -80,11 +108,18 @@ class GameTopService(BaseGameService):
         with ComplexKanjiRepository(self.setting.campus.complex_kanji['db']['filepath']) as repo:
             await self.top_page.click_game_link(gamename="難読漢字")
             try:
-                await self.ad_killer.kill_ad()
                 await self.page.wait_for_load_state("domcontentloaded")
-            finally:
                 await self.page.locator("#start_game").click()
+            except Exception as e:
+                await self.ad_killer.kill_ad()
+            finally:
                 await self.top_page.click_game_start_dialog()
+
+                start_game = self.page.locator("#start_game")
+                if await start_game.is_visible():
+                    await self.top_page.click_game_start_dialog()
+                    await start_game.click()
+
                 # ここがゲーム本体
                 complex_kanji_service = ComplexKanjiService(self.page, repo, self.setting)
                 await complex_kanji_service.game_start()
@@ -93,11 +128,18 @@ class GameTopService(BaseGameService):
         with IdiomRepository(self.setting.campus.sanji['db']['filepath']) as repo:
             await self.top_page.click_game_link(gamename="三字熟語ゲーム")
             try:
-                await self.ad_killer.kill_ad()
                 await self.page.wait_for_load_state("domcontentloaded")
-            finally:
                 await self.page.locator("#start_game").click()
+            except Exception as e:
+                await self.ad_killer.kill_ad()
+            finally:
                 await self.top_page.click_game_start_dialog()
+
+                start_game = self.page.locator("#start_game")
+                if await start_game.is_visible():
+                    await self.top_page.click_game_start_dialog()
+                    await start_game.click()
+
                 # ここがゲーム本体
                 sanji_service = SanjiService(self.page, repo, self.setting, self.context)
                 await sanji_service.game_start()

@@ -8,6 +8,16 @@ class BingoPage(BasePage):
     def __init__(self, page):
         super().__init__(page=page)
 
+    async def cleared(self):
+        """
+        【クリア済み】応募するがあるかどうか
+        """
+        link = self.page.get_by_role(
+            "link",
+            name="【クリア済み】応募する"
+        )
+        return await link.is_visible()
+
     async def finished(self):
         """
         最初の「応募する」があるかどうか

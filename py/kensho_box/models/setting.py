@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class SiteSetting:
+    allowed_domain: str
     login_url: str
     prize_everyday_url: str
     treasure_url: str

@@ -6,7 +6,7 @@ class BingoService(BaseGameService):
 
     def __init__(self, page, setting):
         super().__init__(page, setting)
-        self.bingo_page = BingoPage(page)
+        self.bingo_page = BingoPage(page, setting)
 
     @property
     def url(self) -> str:

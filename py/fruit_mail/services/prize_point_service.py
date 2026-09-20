@@ -6,7 +6,7 @@ class PrizePointService(BaseGameService):
 
     def __init__(self, page, setting):
         super().__init__(page, setting)
-        self.prize_page = PrizePointPage(page)
+        self.prize_page = PrizePointPage(page, setting)
 
     @property
     def url(self) -> str:

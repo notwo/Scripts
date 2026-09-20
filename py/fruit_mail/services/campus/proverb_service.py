@@ -25,7 +25,7 @@ class ProverbService():
 
     def __init__(self, page, repo, setting):
         self.page = page
-        self.proverb_page = ProverbPage(page)
+        self.proverb_page = ProverbPage(page,setting)
         self.solver = ProverbSolver()
         self.medal_service = MedalService(page=page,setting=setting)
         self._repo = repo
@@ -34,6 +34,10 @@ class ProverbService():
 
     async def game_start(self):
         print("======== ことわざクイズ開始 ========")
+
+        start_game = self.page.locator("#start_game")
+        if await start_game.is_visible():
+            await start_game.click()
 
         while True:
             try:

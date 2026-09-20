@@ -6,7 +6,7 @@ class PrizeGorgeousService(BaseGameService):
 
     def __init__(self, page, setting):
         super().__init__(page, setting)
-        self.prize_page = PrizeGorgeousPage(page)
+        self.prize_page = PrizeGorgeousPage(page, setting)
 
     @property
     def url(self) -> str:

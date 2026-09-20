@@ -1,5 +1,9 @@
 site:
   login_url: https://www.fruitmail.net/login?go_html=https://www.fruitmail.net/game/
+  allowed_domain:
+    - www.fruitmail.net
+    - slot.fruitmail.net
+    - campus.fruitmail.net
   game_top_url: https://www.fruitmail.net/game/
   campus_url: https://www.fruitmail.net/game/campus/
   bingo_url: https://www.fruitmail.net/bingo/index.php
@@ -61,4 +65,4 @@ routine:
   prize_point: True
   prize_gorgeous: True
   daily_ad_click: True
-  hidden_point: True
+  hidden_point: False

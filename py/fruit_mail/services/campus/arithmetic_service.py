@@ -8,13 +8,24 @@ from services.campus.medal_service import MedalService
 class ArithmeticService():
     def __init__(self, page, setting):
         self.page = page
-        self.arithmetic_page = ArithmeticPage(page)
+        self.arithmetic_page = ArithmeticPage(page,setting)
         self.solver = ArithmeticSolver()
         self.medal_service = MedalService(page=page,setting=setting)
         self.setting = setting
 
     async def game_start(self):
         print("======== 計算ゲーム開始 ========")
+
+        dialog = self.page.get_by_role(
+            "link",
+            name="ゲームを開始する"
+        )
+        if await dialog.is_visible():
+            await dialog.click()
+
+        start_game = self.page.locator("#start_game")
+        if await start_game.is_visible():
+            await start_game.click()
 
         while True:
             try:

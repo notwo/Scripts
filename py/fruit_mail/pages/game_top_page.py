@@ -3,8 +3,8 @@ from pages.base_page import BasePage
 
 class GameTopPage(BasePage):
 
-    def __init__(self, page):
-        super().__init__(page)
+    def __init__(self, page, setting):
+        super().__init__(page, setting=setting)
 
     async def goto_campus(self, url):
         await self.page.goto(url, wait_until="domcontentloaded")
@@ -16,7 +16,9 @@ class GameTopPage(BasePage):
         ).click()
 
     async def click_game_start_dialog(self):
-        await self.page.get_by_role(
+        dialog = self.page.get_by_role(
             "link",
             name="ゲームを開始する"
-        ).click()
+        )
+        if await dialog.is_visible():
+            await dialog.click()

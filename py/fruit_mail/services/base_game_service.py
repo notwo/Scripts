@@ -8,7 +8,7 @@ class BaseGameService(ABC):
     def __init__(self, page, setting):
         self.page = page
         self.setting = setting
-        self.ad_killer = AdKiller(page=page)
+        self.ad_killer = AdKiller(page=page, setting=setting)
 
     @property
     @abstractmethod

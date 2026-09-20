@@ -3,8 +3,8 @@ from pages.base_page import BasePage
 
 class PrizeEverydayPage(BasePage):
 
-    def __init__(self, page):
-        super().__init__(page)
+    def __init__(self, page, setting):
+        super().__init__(page, setting=setting)
 
     async def get_apply_numbers(self) -> list[dict]:
         """

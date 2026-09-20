@@ -6,7 +6,7 @@ class PrizeEverydayService(BaseGameService):
 
     def __init__(self, page, setting):
         super().__init__(page, setting)
-        self.prize_page = PrizeEverydayPage(page)
+        self.prize_page = PrizeEverydayPage(page, setting)
 
     @property
     def url(self) -> str:
@@ -18,7 +18,6 @@ class PrizeEverydayService(BaseGameService):
         while True:
             try:
                 if await self.prize_page.finished():
-                    print("======== 応募済み ========")
                     break
 
                 await self.prize_page.click_apply_button()
@@ -30,6 +29,6 @@ class PrizeEverydayService(BaseGameService):
                 await self.prize_page.click_final_apply_button()
 
             except Exception as e:
-                self.prize_page.close_ad()
+                await self.prize_page.close_ad()
 
         print("======== 応募完了 ========")

@@ -8,7 +8,7 @@ class HiddenPointService(BaseGameService):
 
     def __init__(self, page, setting):
         super().__init__(page, setting)
-        self.hidden_point_page = HiddenPointPage(page)
+        self.hidden_point_page = HiddenPointPage(page, setting)
 
     @property
     def url(self):

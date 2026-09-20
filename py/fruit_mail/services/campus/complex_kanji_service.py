@@ -25,7 +25,7 @@ class ComplexKanjiService():
 
     def __init__(self, page, repo, setting):
         self.page = page
-        self.complex_kanji_page = ComplexKanjiPage(page)
+        self.complex_kanji_page = ComplexKanjiPage(page,setting)
         self.solver = ComplexKanjiSolver()
         self.medal_service = MedalService(page=page,setting=setting)
         self._repo = repo
@@ -34,6 +34,17 @@ class ComplexKanjiService():
 
     async def game_start(self):
         print("======== 難読漢字開始 ========")
+
+        dialog = self.page.get_by_role(
+            "link",
+            name="ゲームを開始する"
+        )
+        if await dialog.is_visible():
+            await dialog.click()
+
+        start_game = self.page.locator("#start_game")
+        if await start_game.is_visible():
+            await start_game.click()
 
         while True:
             try:

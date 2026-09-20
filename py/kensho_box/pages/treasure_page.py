@@ -1,11 +1,18 @@
+from urllib.parse import urlparse
 import asyncio
 from pages.base_page import BasePage
 
 
 class TreasurePage(BasePage):
 
-    def __init__(self, page):
+    def __init__(self, page, setting):
         super().__init__(page=page)
+        self.setting = setting
+
+    def _invalid_domain(self) -> bool:
+        current_url = self.page.url
+        domain = urlparse(current_url).netloc
+        return domain != self.setting.site.allowed_domain
 
     async def finished(self):
         """
@@ -23,8 +30,14 @@ class TreasurePage(BasePage):
         """
         最初の「応募する」
         """
+        # 全然違う画面に遷移していたら画面を戻る
+        if self._invalid_domain():
+            await self.page.go_back()
+
         await asyncio.sleep(3)
-        await self.close_ad()
+
+        if self._invalid_domain():
+            await self.page.go_back()
 
         link = self.page.get_by_role(
             "link",
@@ -37,8 +50,14 @@ class TreasurePage(BasePage):
         """
         「確認して次へ」
         """
+        # 全然違う画面に遷移していたら画面を戻る
+        if self._invalid_domain():
+            await self.page.go_back()
+
         await asyncio.sleep(3)
-        await self.close_ad()
+
+        if self._invalid_domain():
+            await self.page.go_back()
 
         link = self.page.get_by_role(
             "link",
@@ -51,8 +70,13 @@ class TreasurePage(BasePage):
         """
         2回目の「応募する」
         """
+        if self._invalid_domain():
+            await self.page.go_back()
+
         await asyncio.sleep(3)
-        await self.close_ad()
+
+        if self._invalid_domain():
+            await self.page.go_back()
 
         button = self.page.get_by_role(
             "button",
@@ -65,12 +89,17 @@ class TreasurePage(BasePage):
         """
         最後の「承諾する」
         """
-        await asyncio.sleep(3)
+        if self._invalid_domain():
+            await self.page.go_back()
+
         await self.close_ad()
+
+        if self._invalid_domain():
+            await self.page.go_back()
 
         button = self.page.get_by_role(
             "button",
             name="承諾する"
         )
-        #if await button.is_visible():
-        await button.click(force=True)
+        if await button.is_visible():
+            await button.click(force=True)

@@ -9,8 +9,8 @@ class PrizeRoulettePage(BasePage):
         ("#stop", "STOP"),
     ]
 
-    def __init__(self, page):
-        super().__init__(page)
+    def __init__(self, page, setting):
+        super().__init__(page, setting=setting)
 
     async def is_applied(self) -> bool:
         return await self.page.get_by_role(
