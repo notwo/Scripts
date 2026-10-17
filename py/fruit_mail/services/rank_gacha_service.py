@@ -1,12 +1,15 @@
+import time
+
 from pages.rank_gacha_page import RankGachaPage
 from services.base_game_service import BaseGameService
 
 
 class RankGachaService(BaseGameService):
 
-    def __init__(self, page, setting):
+    def __init__(self, page, setting, browser):
         super().__init__(page, setting)
         self.gacha_page = RankGachaPage(page, setting)
+        self.browser = browser
 
     @property
     def url(self) -> str:
@@ -15,8 +18,16 @@ class RankGachaService(BaseGameService):
     async def play(self):
         print("======== ガチャ開始 ========")
 
+        timeout = 1 * 20
+        start_time = time.time()
         while True: 
             try:
+                print(time.time() - start_time)
+                print(timeout)
+                if time.time() - start_time >= timeout:
+                    await self.browser.close()
+                    exit()
+
                 if await self.gacha_page.is_finished():
                     print("「ガチャの結果はこちら」を検出")
                     break

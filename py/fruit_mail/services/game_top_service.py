@@ -14,11 +14,12 @@ from db.complex_kanji_repository import ComplexKanjiRepository
 
 class GameTopService(BaseGameService):
 
-    def __init__(self, page, setting, context):
+    def __init__(self, page, setting, context, browser):
         super().__init__(page, setting)
         self.top_page = GameTopPage(page, setting)
         self.setting = setting
         self.context = context
+        self.browser = browser
 
     @property
     def url(self) -> str:
@@ -43,7 +44,7 @@ class GameTopService(BaseGameService):
                 await start_game.click()
 
             # ここがゲーム本体
-            calculate_service = CalculateService(self.page, self.setting)
+            calculate_service = CalculateService(self.page, self.setting, self.browser)
             await calculate_service.game_start()
 
     async def _arithmetic(self):
@@ -141,7 +142,7 @@ class GameTopService(BaseGameService):
                     await start_game.click()
 
                 # ここがゲーム本体
-                sanji_service = SanjiService(self.page, repo, self.setting, self.context)
+                sanji_service = SanjiService(self.page, repo, self.setting, self.context, self.browser)
                 await sanji_service.game_start()
 
     async def play(self):

@@ -1,12 +1,15 @@
+import time
+
 from pages.prize_point_page import PrizePointPage
 from services.base_game_service import BaseGameService
 
 
 class PrizePointService(BaseGameService):
 
-    def __init__(self, page, setting):
+    def __init__(self, page, setting, browser):
         super().__init__(page, setting)
         self.prize_page = PrizePointPage(page, setting)
+        self.browser = browser
 
     @property
     def url(self) -> str:
@@ -15,8 +18,16 @@ class PrizePointService(BaseGameService):
     async def play(self):
         print("======== ポイント懸賞開始 ========")
 
+        timeout = 1 * 60 * 1
+        start_time = time.time()
+
         while True:
             try:
+                print(time.time())
+                if time.time() - start_time >= timeout:
+                    await self.browser.close()
+                    exit()
+
                 options = await self.prize_page.get_apply_numbers()
 
                 numeric_options = [

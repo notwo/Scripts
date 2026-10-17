@@ -1,13 +1,16 @@
+import time
+
 from pages.chirashi_page import ChirashiPage
 from services.base_game_service import BaseGameService
 
 
 class ChirashiService(BaseGameService):
 
-    def __init__(self, page, setting):
+    def __init__(self, page, setting, browser):
         super().__init__(page, setting)
         self.chirashi_page = ChirashiPage(page, setting)
         self.clicked = False
+        self.browser = browser
 
     @property
     def url(self) -> str:
@@ -16,8 +19,16 @@ class ChirashiService(BaseGameService):
     async def play(self):
         print("======== チラシクリック開始 ========")
 
+        timeout = 1 * 20
+        start_time = time.time()
         while True:
             try:
+                print(time.time() - start_time)
+                print(timeout)
+                if time.time() - start_time >= timeout:
+                    await self.browser.close()
+                    exit()
+
                 if self.clicked:
                     break
 

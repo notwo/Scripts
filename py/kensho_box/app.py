@@ -8,7 +8,7 @@ from services.prize_everyday_service import PrizeEverydayService
 from services.treasure_service import TreasureService
 
 
-def routine_services(page):
+def routine_services(page, browser):
     services = []
 
     if setting.routine.prize_everyday:
@@ -16,7 +16,7 @@ def routine_services(page):
     if setting.routine.treasure:
         services.append(TreasureService(page, setting))
     if setting.routine.bingo:
-        services.append(BingoService(page, setting))
+        services.append(BingoService(page, setting, browser))
 
     return services
 
@@ -33,7 +33,7 @@ async def main():
 
         kensho_box = KenshoBoxService(
             login_service=LoginService(page, setting),
-            routine_services=routine_services(page)
+            routine_services=routine_services(page, browser)
         )
         await kensho_box.execute()
 

@@ -1,3 +1,4 @@
+import time
 import asyncio
 
 from pages.campus.sanji_page import SanjiPage
@@ -23,7 +24,7 @@ class SanjiService():
       (7)    clear をクリック
     """
 
-    def __init__(self, page, repo, setting, context):
+    def __init__(self, page, repo, setting, context, browser):
         self.page = page
         self.sanji_page = SanjiPage(page,setting)
         self.solver = SanjiSolver()
@@ -32,6 +33,7 @@ class SanjiService():
         self.setting = setting
         self.context = context
         self._max_combo_attempts = self.setting.campus.sanji["max_combo_attempts"]
+        self.browser = browser
 
     async def game_start(self):
         print("======== 三字熟語ゲーム開始 ========")
@@ -47,7 +49,14 @@ class SanjiService():
         if await start_game.is_visible():
             await start_game.click()
 
+        timeout = 1 * 120 * 1
+        start_time = time.time()
         while True:
+            print(time.time())
+            if time.time() - start_time >= timeout:
+                await self.browser.close()
+                exit()
+
             try:
                 if await self.sanji_page.is_finished():
                     await self.medal_service.run()
@@ -94,7 +103,7 @@ class SanjiService():
                 return
             #print("  → DBのデータと実際の正解が一致しませんでした。外部サイトアクセスに切り替えます。")
             print("  → DBのデータと実際の正解が一致しませんでした。ブルートフォースに切り替えます。")
-            self._repo.remove(db_combo)
+            self._repo.remove(''.join(db_combo))
 
         # 2. 別サイトで検索
         #search_result = await self._search_by_external_site(available=available)

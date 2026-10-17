@@ -1,3 +1,4 @@
+import time
 import asyncio
 
 from lib.calculate_solver import CalculateSolver
@@ -6,15 +7,19 @@ from services.campus.medal_service import MedalService
 
 
 class CalculateService():
-    def __init__(self, page, setting):
+    def __init__(self, page, setting, browser):
         self.page = page
         self.calculate_page = CalculatePage(page,setting)
         self.solver = CalculateSolver()
         self.medal_service = MedalService(page=page,setting=setting)
         self.setting = setting
+        self.browser = browser
 
     async def game_start(self):
         print("======== 四則演算記号ゲーム開始 ========")
+
+        timeout = 1 * 60 * 1
+        start_time = time.time()
 
         dialog = self.page.get_by_role(
             "link",
@@ -29,11 +34,23 @@ class CalculateService():
 
         while True:
             try:
+                print(time.time())
+                if time.time() - start_time >= timeout:
+                    await self.browser.close()
+                    exit()
+                else:
+                    start_time = time.time()
+
                 if await self.calculate_page.is_finished():
                     await self.medal_service.run()
                     break
 
                 await self._run()
+
+                # リトライがあったら即ブラウザクローズ
+                retry = self.page.locator("#retry")
+                if await retry.is_visible():
+                    await self.browser.close()
 
                 await self.calculate_page.transfer_check()
 

@@ -17,7 +17,7 @@ from services.game_top_service import GameTopService
 from services.hidden_point_service import HiddenPointService
 
 
-def game_services(page, context):
+def game_services(page, context, browser):
     services = []
 
     if setting.game.bingo:
@@ -25,28 +25,28 @@ def game_services(page, context):
     if setting.game.scratch:
         services.append(ScratchService(page, setting))
     if setting.game.chirashi:
-        services.append(ChirashiService(page, setting))
+        services.append(ChirashiService(page, setting, browser))
     if setting.game.rank_gacha:
-        services.append(RankGachaService(page, setting))
+        services.append(RankGachaService(page, setting, browser))
     if setting.game.prize_present_slot:
         services.append(PrizePresentSlotService(page, setting))
     if setting.game.prize_roulette:
         services.append(PrizeRouletteService(page, setting))
     if setting.game.top:
-        services.append(GameTopService(page, setting, context))
+        services.append(GameTopService(page, setting, context, browser))
 
     return services
 
 
-def routine_services(page):
+def routine_services(page, browser):
     services = []
 
     if setting.routine.prize_everyday:
-        services.append(PrizeEverydayService(page, setting))
+        services.append(PrizeEverydayService(page, setting, browser))
     if setting.routine.prize_point:
-        services.append(PrizePointService(page, setting))
+        services.append(PrizePointService(page, setting, browser))
     if setting.routine.prize_gorgeous:
-        services.append(PrizeGorgeousService(page, setting))
+        services.append(PrizeGorgeousService(page, setting, browser))
     if setting.routine.daily_ad_click:
         services.append(DailyAdClickService(page, setting))
     if setting.routine.hidden_point:
@@ -69,8 +69,8 @@ async def main():
 
         fruitmail = FruitmailService(
             login_service=LoginService(page, setting),
-            game_services=game_services(page, context),
-            routine_services=routine_services(page)
+            game_services=game_services(page, context, browser),
+            routine_services=routine_services(page, browser)
         )
         await fruitmail.execute()
 
